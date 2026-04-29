@@ -2,17 +2,16 @@ const islandCopy = {
   "la-palma": {
     kicker: "La Palma",
     title: "Atención cercana y seguimiento coordinado",
-    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicación a las necesidades de la persona y su entorno familiar, educativo o laboral."
+    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicación a las necesidades de la persona y su entorno familiar, educativo o laboral. <br><strong>¿Necesitas ayuda logopédica? Llama al 618 394 750 o contacta por email a <a href='mailto:logopedialapalma@funcasor.org'>logopedialapalma@funcasor.org</a>"
   },
-  tenerife: {
-    kicker: "Tenerife",
-    title: "Intervención especializada y recursos compartidos",
-    text: "La isla funciona como un punto clave para valorar necesidades, planificar sesiones y coordinar apoyos con familias, centros educativos y otros profesionales."
+  tenerife: { kicker: "Tenerife", 
+    title: "Intervención especializada y recursos compartidos", 
+    text: "La isla funciona como un punto clave para valorar necesidades, planificar sesiones y coordinar apoyos con familias, centros educativos y otros profesionales. <br><strong>¿Necesitas ayuda logopédica? Llama al 646 210 763 o contacta por email a <a href='mailto:logopediatenerife@funcasor.org'>logopediatenerife@funcasor.org</a>" 
   },
   "gran-canaria": {
     kicker: "Gran Canaria",
     title: "Rehabilitación auditiva orientada a la participación",
-    text: "El trabajo logopédico se centra en que la persona use la audición y el lenguaje en conversaciones, rutinas, aprendizaje y autonomía diaria."
+    text: "El trabajo logopédico se centra en que la persona use la audición y el lenguaje en conversaciones, rutinas, aprendizaje y autonomía diaria. <br><strong>¿Necesitas ayuda logopédica? Llama al 646 964 470 o contacta por email a <a href='mailto:logopediagc@funcasor.org'>logopediagc@funcasor.org</a>"
   }
 };
 
@@ -33,10 +32,10 @@ const rehabCopy = {
   },
   identificacion: {
     title: "Identificación",
-    text: "La persona reconoce una palabra o sonido dentro de un conjunto cerrado de opciones conocidas.",
+    text: "La persona reconoce un sonido dentro de un conjunto cerrado de opciones conocidas.",
     kicker: "Identificación",
-    gameTitle: "Identifica la palabra",
-    instruction: "Pulsa reproducir y elige la palabra que has escuchado entre las opciones."
+    gameTitle: "Identifica el sonido",
+    instruction: "Pulsa reproducir y elige si has escuchado un teléfono, un perro o un coche."
   },
   reconocimiento: {
     title: "Reconocimiento auditivo",
@@ -69,6 +68,31 @@ let currentGame = "deteccion";
 let currentAnswer = null;
 let currentPlayable = null;
 let audioContext = null;
+let playbackTimers = [];
+let activeOscillators = [];
+let activeAudioElements = [];
+let advanceTimer = null;
+const lastSelections = {};
+
+const remoteSoundEffects = {
+  phone: {
+    url: "https://assets.mixkit.co/active_storage/sfx/1350/1350-preview.mp3",
+    duration: 1300,
+    fallback: playPhoneRing
+  },
+  dog: {
+    url: "https://assets.mixkit.co/active_storage/sfx/1/1-preview.mp3",
+    duration: 1300,
+    fallback: playDogBark
+  },
+  car: {
+    url: "https://assets.mixkit.co/active_storage/sfx/1565/1565-preview.mp3",
+    duration: 1300,
+    fallback: playCarSound
+  }
+};
+
+const soundCache = {};
 
 const islandPanel = document.querySelector("#island-panel");
 const rehabDetail = document.querySelector("#rehab-detail");
@@ -115,6 +139,8 @@ function setGame(game) {
 }
 
 function renderGame() {
+  stopPlayback();
+  window.clearTimeout(advanceTimer);
   feedback.textContent = "";
   feedback.className = "feedback";
   currentPlayable = null;
@@ -139,65 +165,61 @@ function renderGame() {
     renderComprehension();
   }
 
-  gameActions.querySelectorAll("button").forEach((button) => {
-    button.addEventListener("click", () => checkAnswer(button.dataset.answer));
-  });
 }
 
 function renderDetection() {
   const options = ["car", "phone", "quiet", "bell", "quiet"];
-  const selected = pick(options);
+  const selected = pickDifferent(options, lastSelections.deteccion);
+  lastSelections.deteccion = selected;
   currentAnswer = selected === "quiet" ? "quiet" : "sound";
   currentPlayable = () => {
     if (selected !== "quiet") {
-      playKnownSound(selected);
+      return playKnownSound(selected);
     }
+    return 600;
   };
   gameStage.innerHTML = stagePrompt("Escucha y decide", "Puede sonar un coche, un teléfono, un timbre... o no sonar nada.");
-  gameActions.innerHTML = `
-    ${playButton()}
-    <button data-answer="sound">Hay sonido</button>
-    <button data-answer="quiet">Silencio</button>
-  `;
+  renderAnswerActions([
+    { value: "sound", label: "Hay sonido" },
+    { value: "quiet", label: "Silencio" }
+  ]);
 }
 
 function renderDiscrimination() {
-  const pair = pick([
+  const pairs = [
     { label: "tono corto + tono corto", answer: "same", pattern: ["beep-high", "beep-high"] },
     { label: "tono corto + tono grave", answer: "different", pattern: ["beep-high", "beep-low"] },
     { label: "teléfono + teléfono", answer: "same", pattern: ["phone", "phone"] },
     { label: "coche + timbre", answer: "different", pattern: ["car", "bell"] }
-  ]);
+  ];
+  const pair = pickDifferent(pairs, lastSelections.discriminacion, (item) => item.label);
+  lastSelections.discriminacion = pair.label;
   currentAnswer = pair.answer;
   currentPlayable = () => playSequence(pair.pattern);
   gameStage.innerHTML = stagePrompt("Escucha dos sonidos", "Sonarán dos estímulos separados. No mires la respuesta: compara lo que oyes.");
-  gameActions.innerHTML = `
-    ${playButton()}
-    <button data-answer="same">Iguales</button>
-    <button data-answer="different">Diferentes</button>
-  `;
+  renderAnswerActions([
+    { value: "same", label: "Iguales" },
+    { value: "different", label: "Diferentes" }
+  ]);
 }
 
 function renderIdentification() {
-  currentAnswer = pick(wordChoices);
-  currentPlayable = () => speak(`Escucha: ${currentAnswer}`);
-  gameStage.innerHTML = stagePrompt("Conjunto cerrado", "Escucha una palabra y selecciona una opción.");
-  gameActions.innerHTML = `
-    ${playButton()}
-    ${shuffle(wordChoices.slice(0, 4).includes(currentAnswer) ? wordChoices.slice(0, 4) : [currentAnswer, "casa", "mesa", "luna"]).map(optionButton).join("")}
-  `;
+  const sounds = ["phone", "dog", "car"];
+  currentAnswer = pickDifferent(sounds, lastSelections.identificacion);
+  lastSelections.identificacion = currentAnswer;
+  currentPlayable = () => playKnownSound(currentAnswer);
+  gameStage.innerHTML = stagePrompt("Conjunto cerrado", "Escucha un sonido y selecciona una opción.");
+  renderAnswerActions(shuffle(sounds).map((sound) => ({ value: sound, label: soundNames[sound] })));
 }
 
 function renderRecognition() {
   const sounds = ["car", "phone", "bell", "water", "dog"];
-  const selected = pick(sounds);
+  const selected = pickDifferent(sounds, lastSelections.reconocimiento);
+  lastSelections.reconocimiento = selected;
   currentAnswer = selected;
   currentPlayable = () => playKnownSound(selected);
   gameStage.innerHTML = stagePrompt("Reconocimiento auditivo", "Escucha un sonido cotidiano sin pista visual y di que es.");
-  gameActions.innerHTML = `
-    ${playButton()}
-    ${shuffle(sounds).map((sound) => optionButton(sound, soundNames[sound])).join("")}
-  `;
+  renderAnswerActions(shuffle(sounds).map((sound) => ({ value: sound, label: soundNames[sound] })));
 }
 
 function renderComprehension() {
@@ -209,14 +231,12 @@ function renderComprehension() {
     { text: "Cuando termine la frase, selecciona mirar la puerta.", answer: "mirar la puerta" },
     { text: "Elige la acción que haces con las piernas: saltar.", answer: "saltar" }
   ];
-  const task = pick(tasks);
+  const task = pickDifferent(tasks, lastSelections.comprension, (item) => item.answer);
+  lastSelections.comprension = task.answer;
   currentAnswer = task.answer;
   currentPlayable = () => speak(task.text);
   gameStage.innerHTML = stagePrompt("Instrucción oral", "Ahora la respuesta depende de comprender toda la frase, no solo una palabra.");
-  gameActions.innerHTML = `
-    ${playButton()}
-    ${shuffle(actionChoices).map(optionButton).join("")}
-  `;
+  renderAnswerActions(makeOptionSet(currentAnswer, actionChoices, 4));
 }
 
 function playButton() {
@@ -224,7 +244,19 @@ function playButton() {
 }
 
 function optionButton(value, label = value) {
-  return `<button data-answer="${value}">${label}</button>`;
+  return `<button type="button" data-answer="${value}">${label}</button>`;
+}
+
+function renderAnswerActions(options) {
+  gameActions.innerHTML = `
+    ${playButton()}
+    ${options.map((option) => optionButton(option.value, option.label)).join("")}
+  `;
+}
+
+function makeOptionSet(answer, choices, total) {
+  const distractors = shuffle(choices.filter((choice) => choice !== answer)).slice(0, total - 1);
+  return shuffle([answer, ...distractors]).map((choice) => ({ value: choice, label: choice }));
 }
 
 function stagePrompt(title, text) {
@@ -238,12 +270,28 @@ function stagePrompt(title, text) {
 
 gameActions.addEventListener("click", (event) => {
   const play = event.target.closest("[data-play]");
-  if (!play || !currentPlayable) {
+  const answer = event.target.closest("[data-answer]");
+
+  if (answer) {
+    checkAnswer(answer.dataset.answer);
     return;
   }
+
+  if (!play || !currentPlayable || play.disabled) {
+    return;
+  }
+
+  stopPlayback();
   feedback.textContent = "Reproduciendo...";
   feedback.className = "feedback";
-  currentPlayable();
+  const duration = currentPlayable() || 1200;
+  play.disabled = true;
+  playbackTimers.push(window.setTimeout(() => {
+    play.disabled = false;
+    if (feedback.textContent === "Reproduciendo...") {
+      feedback.textContent = "Ahora elige una opcion.";
+    }
+  }, duration));
 });
 
 function checkAnswer(answer) {
@@ -254,7 +302,28 @@ function checkAnswer(answer) {
   feedback.textContent = isCorrect ? "Correcto. Buen trabajo de escucha." : "Casi. Reproduce otra vez y vuelve a intentarlo.";
   feedback.className = `feedback ${isCorrect ? "ok" : "retry"}`;
   if (isCorrect) {
-    window.setTimeout(renderGame, 1300);
+    advanceTimer = window.setTimeout(renderGame, 1300);
+  }
+}
+
+function stopPlayback() {
+  playbackTimers.forEach((timer) => window.clearTimeout(timer));
+  playbackTimers = [];
+  activeOscillators.forEach((oscillator) => {
+    try {
+      oscillator.stop();
+    } catch (error) {
+      // The oscillator may already have stopped.
+    }
+  });
+  activeOscillators = [];
+  activeAudioElements.forEach((audio) => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+  activeAudioElements = [];
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
   }
 }
 
@@ -281,63 +350,208 @@ function tone(frequency, start, duration, type = "sine", volume = 0.18) {
   gain.connect(context.destination);
   oscillator.start(start);
   oscillator.stop(start + duration + 0.03);
+  activeOscillators.push(oscillator);
+  oscillator.onended = () => {
+    activeOscillators = activeOscillators.filter((item) => item !== oscillator);
+  };
+}
+
+function sweepTone(startFrequency, endFrequency, start, duration, type = "sine", volume = 0.18) {
+  const context = ensureAudio();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(startFrequency, start);
+  oscillator.frequency.exponentialRampToValueAtTime(endFrequency, start + duration);
+  gain.gain.setValueAtTime(0.001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.03);
+  activeOscillators.push(oscillator);
+  oscillator.onended = () => {
+    activeOscillators = activeOscillators.filter((item) => item !== oscillator);
+  };
 }
 
 function playSequence(pattern) {
-  const context = ensureAudio();
+  ensureAudio();
   pattern.forEach((sound, index) => {
-    window.setTimeout(() => playKnownSound(sound), index * 850);
+    const timer = window.setTimeout(() => playKnownSound(sound), index * 850);
+    playbackTimers.push(timer);
   });
-  return context;
+  return pattern.length * 850 + 500;
+}
+
+function playNoise(start, duration, frequency = null, volume = 0.2, filterType = "lowpass", q = 0.7) {
+  const context = ensureAudio();
+  const bufferSize = context.sampleRate * duration;
+  const buffer = context.createBuffer(1, bufferSize, context.sampleRate);
+  const data = buffer.getChannelData(0);
+  
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+  
+  const source = context.createBufferSource();
+  source.buffer = buffer;
+  
+  const gain = context.createGain();
+  gain.gain.setValueAtTime(0.001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+  
+  if (frequency) {
+    const filter = context.createBiquadFilter();
+    filter.type = filterType;
+    filter.frequency.value = frequency;
+    filter.Q.value = q;
+    source.connect(filter);
+    filter.connect(gain);
+  } else {
+    source.connect(gain);
+  }
+  
+  gain.connect(context.destination);
+  source.start(start);
+  source.stop(start + duration + 0.02);
+  activeOscillators.push(source);
+  source.onended = () => {
+    activeOscillators = activeOscillators.filter((item) => item !== source);
+  };
+}
+
+function playPhoneRing(start) {
+  [0, 0.34, 0.88, 1.22].forEach((offset) => {
+    tone(440, start + offset, 0.22, "sine", 0.18);
+    tone(480, start + offset, 0.22, "sine", 0.18);
+    tone(1760, start + offset, 0.08, "triangle", 0.08);
+  });
+}
+
+function playDogBark(start) {
+  [0, 0.34, 0.82].forEach((offset, index) => {
+    const barkStart = start + offset;
+    playNoise(barkStart, 0.16, 900 - index * 90, 0.32, "bandpass", 5);
+    sweepTone(520 - index * 35, 180, barkStart + 0.02, 0.18, "sawtooth", 0.16);
+    tone(120, barkStart + 0.04, 0.12, "square", 0.08);
+  });
+}
+
+function playCarSound(start) {
+  playNoise(start, 1.05, 170, 0.34, "lowpass", 0.9);
+  sweepTone(95, 145, start, 0.55, "sawtooth", 0.12);
+  sweepTone(145, 90, start + 0.55, 0.5, "sawtooth", 0.1);
+  tone(330, start + 1.1, 0.22, "square", 0.18);
+  tone(392, start + 1.1, 0.22, "square", 0.14);
+  tone(330, start + 1.4, 0.18, "square", 0.16);
+  tone(392, start + 1.4, 0.18, "square", 0.12);
+}
+
+function preloadRemoteSounds() {
+  Object.entries(remoteSoundEffects).forEach(([sound, effect]) => {
+    if (!soundCache[sound]) {
+      soundCache[sound] = new Audio(effect.url);
+      soundCache[sound].preload = "auto";
+    }
+  });
+}
+
+function playRemoteSound(sound) {
+  const effect = remoteSoundEffects[sound];
+  if (!effect) {
+    return null;
+  }
+
+  const cachedAudio = soundCache[sound] || new Audio(effect.url);
+  soundCache[sound] = cachedAudio;
+  const audio = cachedAudio.cloneNode();
+  audio.preload = "auto";
+  audio.volume = 0.9;
+  activeAudioElements.push(audio);
+
+  audio.addEventListener("ended", () => {
+    activeAudioElements = activeAudioElements.filter((item) => item !== audio);
+  }, { once: true });
+
+  audio.addEventListener("error", () => {
+    activeAudioElements = activeAudioElements.filter((item) => item !== audio);
+    effect.fallback(ensureAudio().currentTime);
+  }, { once: true });
+
+  const playPromise = audio.play();
+  if (playPromise) {
+    playPromise.catch(() => {
+      activeAudioElements = activeAudioElements.filter((item) => item !== audio);
+      effect.fallback(ensureAudio().currentTime);
+    });
+  }
+
+  return effect.duration;
 }
 
 function playKnownSound(sound) {
   const context = ensureAudio();
   const now = context.currentTime;
+  const remoteDuration = playRemoteSound(sound);
+
+  if (remoteDuration) {
+    return remoteDuration;
+  }
 
   if (sound === "phone") {
-    tone(880, now, 0.18, "sine", 0.16);
-    tone(1100, now + 0.22, 0.18, "sine", 0.16);
-    tone(880, now + 0.48, 0.18, "sine", 0.16);
-    tone(1100, now + 0.7, 0.18, "sine", 0.16);
+    // Telefono: doble timbre con armonicos, mas parecido a una llamada.
+    playPhoneRing(now);
+    return 1900;
   }
 
   if (sound === "car") {
-    tone(220, now, 0.38, "sawtooth", 0.2);
-    tone(185, now + 0.42, 0.32, "sawtooth", 0.18);
+    // Coche: motor grave con una bocina breve para que sea reconocible.
+    playCarSound(now);
+    return 1900;
   }
 
   if (sound === "bell") {
-    tone(740, now, 0.16, "triangle", 0.17);
-    tone(980, now + 0.18, 0.24, "triangle", 0.15);
+    // Timbre: tonos agudos claros.
+    tone(800, now, 0.15, "triangle", 0.35);
+    tone(1000, now + 0.1, 0.2, "triangle", 0.32);
+    tone(1200, now + 0.35, 0.15, "triangle", 0.28);
+    return 1300;
   }
 
   if (sound === "water") {
-    for (let i = 0; i < 9; i += 1) {
-      tone(420 + Math.random() * 360, now + i * 0.08, 0.07, "sine", 0.06);
-    }
+    // Agua: ruido brillante y continuo.
+    playNoise(now, 1.2, 5200, 0.22, "highpass", 0.8);
+    playNoise(now + 0.1, 1.0, 1800, 0.16, "bandpass", 1.4);
+    return 1600;
   }
 
   if (sound === "dog") {
-    tone(360, now, 0.14, "square", 0.14);
-    tone(300, now + 0.18, 0.16, "square", 0.13);
-    tone(390, now + 0.46, 0.13, "square", 0.12);
+    // Perro: tres ladridos cortos con golpe grave.
+    playDogBark(now);
+    return 1600;
   }
 
   if (sound === "beep-high") {
-    tone(880, now, 0.28, "sine", 0.14);
+    tone(880, now, 0.35, "sine", 0.28);
+    return 900;
   }
 
   if (sound === "beep-low") {
-    tone(330, now, 0.28, "sine", 0.14);
+    tone(330, now, 0.35, "sine", 0.28);
+    return 900;
   }
+
+  return 1600;
 }
 
 function speak(text) {
   if (!("speechSynthesis" in window)) {
     feedback.textContent = "Este navegador no tiene voz sintética disponible. Puedes probar con Chrome o Edge.";
     feedback.className = "feedback retry";
-    return;
+    return 0;
   }
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
@@ -345,10 +559,19 @@ function speak(text) {
   utterance.rate = 0.86;
   utterance.pitch = 1;
   window.speechSynthesis.speak(utterance);
+  return Math.max(1700, text.length * 55);
 }
 
 function pick(items) {
   return items[Math.floor(Math.random() * items.length)];
+}
+
+function pickDifferent(items, previous, getKey = (item) => item) {
+  if (items.length < 2) {
+    return pick(items);
+  }
+  const available = items.filter((item) => getKey(item) !== previous);
+  return pick(available.length ? available : items);
 }
 
 function shuffle(items) {
@@ -358,4 +581,5 @@ function shuffle(items) {
     .map(({ item }) => item);
 }
 
+preloadRemoteSounds();
 renderGame();

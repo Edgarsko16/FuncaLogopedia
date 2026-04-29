@@ -519,6 +519,17 @@ svg {
   color: var(--brand-dark);
 }
 
+.game-actions button[data-play] {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+
+.game-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .feedback {
   min-height: 28px;
   margin: 16px 0 0;
