@@ -1,62 +1,62 @@
 const islandCopy = {
   "la-palma": {
     kicker: "La Palma",
-    title: "Atencion cercana y seguimiento coordinado",
-    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicacion a las necesidades de la persona y su entorno familiar, educativo o laboral."
+    title: "Atención cercana y seguimiento coordinado",
+    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicación a las necesidades de la persona y su entorno familiar, educativo o laboral."
   },
   tenerife: {
     kicker: "Tenerife",
-    title: "Intervencion especializada y recursos compartidos",
+    title: "Intervención especializada y recursos compartidos",
     text: "La isla funciona como un punto clave para valorar necesidades, planificar sesiones y coordinar apoyos con familias, centros educativos y otros profesionales."
   },
   "gran-canaria": {
     kicker: "Gran Canaria",
-    title: "Rehabilitacion auditiva orientada a la participacion",
-    text: "El trabajo logopedico se centra en que la persona use la audicion y el lenguaje en conversaciones, rutinas, aprendizaje y autonomia diaria."
+    title: "Rehabilitación auditiva orientada a la participación",
+    text: "El trabajo logopédico se centra en que la persona use la audición y el lenguaje en conversaciones, rutinas, aprendizaje y autonomía diaria."
   }
 };
 
 const rehabCopy = {
   deteccion: {
-    title: "Deteccion",
-    text: "La persona aprende a advertir si hay presencia o ausencia de sonido: por ejemplo, si suena un coche, un telefono o si hay silencio.",
-    kicker: "Deteccion",
+    title: "Detección",
+    text: "La persona aprende a advertir si hay presencia o ausencia de sonido: por ejemplo, si suena un coche, un teléfono o si hay silencio.",
+    kicker: "Detección",
     gameTitle: "Presencia o ausencia de sonido",
-    instruction: "Pulsa reproducir y decide si has escuchado algun sonido o si ha habido silencio."
+    instruction: "Pulsa reproducir y decide si has escuchado algún sonido o si ha habido silencio."
   },
   discriminacion: {
-    title: "Discriminacion",
+    title: "Discriminación",
     text: "Se entrenan diferencias entre sonidos: dos tonos iguales o diferentes, ritmos largos o cortos, sonidos fuertes o suaves.",
-    kicker: "Discriminacion",
+    kicker: "Discriminación",
     gameTitle: "Compara dos sonidos",
     instruction: "Pulsa reproducir y decide si los dos sonidos son iguales o diferentes."
   },
   identificacion: {
-    title: "Identificacion",
+    title: "Identificación",
     text: "La persona reconoce una palabra o sonido dentro de un conjunto cerrado de opciones conocidas.",
-    kicker: "Identificacion",
+    kicker: "Identificación",
     gameTitle: "Identifica la palabra",
     instruction: "Pulsa reproducir y elige la palabra que has escuchado entre las opciones."
   },
   reconocimiento: {
     title: "Reconocimiento auditivo",
-    text: "La persona reconoce sonidos cotidianos sin ver la respuesta antes: telefono, coche, timbre, agua u otros sonidos familiares.",
+    text: "La persona reconoce sonidos cotidianos sin ver la respuesta antes: teléfono, coche, timbre, agua u otros sonidos familiares.",
     kicker: "Reconocimiento",
-    gameTitle: "Que sonido cotidiano es",
-    instruction: "Pulsa reproducir y elige que sonido conocido has escuchado."
+    gameTitle: "Qué sonido cotidiano es",
+    instruction: "Pulsa reproducir y elige qué sonido conocido has escuchado."
   },
   comprension: {
-    title: "Comprension",
-    text: "La escucha se usa para entender instrucciones con mas informacion: accion, objeto, color, orden o condicion.",
-    kicker: "Comprension",
-    gameTitle: "Sigue la instruccion oral",
-    instruction: "Pulsa reproducir, escucha la instruccion completa y elige la respuesta correcta."
+    title: "Comprensión",
+    text: "La escucha se usa para entender instrucciones con más información: acción, objeto, color, orden o condición.",
+    kicker: "Comprensión",
+    gameTitle: "Sigue la instrucción oral",
+    instruction: "Pulsa reproducir, escucha la instrucción completa y elige la respuesta correcta."
   }
 };
 
 const soundNames = {
   car: "coche",
-  phone: "telefono",
+  phone: "teléfono",
   bell: "timbre",
   water: "agua",
   dog: "perro"
@@ -153,7 +153,7 @@ function renderDetection() {
       playKnownSound(selected);
     }
   };
-  gameStage.innerHTML = stagePrompt("Escucha y decide", "Puede sonar un coche, un telefono, un timbre... o no sonar nada.");
+  gameStage.innerHTML = stagePrompt("Escucha y decide", "Puede sonar un coche, un teléfono, un timbre... o no sonar nada.");
   gameActions.innerHTML = `
     ${playButton()}
     <button data-answer="sound">Hay sonido</button>
@@ -165,12 +165,12 @@ function renderDiscrimination() {
   const pair = pick([
     { label: "tono corto + tono corto", answer: "same", pattern: ["beep-high", "beep-high"] },
     { label: "tono corto + tono grave", answer: "different", pattern: ["beep-high", "beep-low"] },
-    { label: "telefono + telefono", answer: "same", pattern: ["phone", "phone"] },
+    { label: "teléfono + teléfono", answer: "same", pattern: ["phone", "phone"] },
     { label: "coche + timbre", answer: "different", pattern: ["car", "bell"] }
   ]);
   currentAnswer = pair.answer;
   currentPlayable = () => playSequence(pair.pattern);
-  gameStage.innerHTML = stagePrompt("Escucha dos sonidos", "Sonaran dos estimulos separados. No mires la respuesta: compara lo que oyes.");
+  gameStage.innerHTML = stagePrompt("Escucha dos sonidos", "Sonarán dos estímulos separados. No mires la respuesta: compara lo que oyes.");
   gameActions.innerHTML = `
     ${playButton()}
     <button data-answer="same">Iguales</button>
@@ -181,7 +181,7 @@ function renderDiscrimination() {
 function renderIdentification() {
   currentAnswer = pick(wordChoices);
   currentPlayable = () => speak(`Escucha: ${currentAnswer}`);
-  gameStage.innerHTML = stagePrompt("Conjunto cerrado", "Escucha una palabra y selecciona una opcion.");
+  gameStage.innerHTML = stagePrompt("Conjunto cerrado", "Escucha una palabra y selecciona una opción.");
   gameActions.innerHTML = `
     ${playButton()}
     ${shuffle(wordChoices.slice(0, 4).includes(currentAnswer) ? wordChoices.slice(0, 4) : [currentAnswer, "casa", "mesa", "luna"]).map(optionButton).join("")}
@@ -202,17 +202,17 @@ function renderRecognition() {
 
 function renderComprehension() {
   const tasks = [
-    { text: "Despues de escuchar, elige levantar la mano.", answer: "levantar la mano" },
+    { text: "Después de escuchar, elige levantar la mano.", answer: "levantar la mano" },
     { text: "Si oyes la palabra mesa, selecciona tocar la mesa.", answer: "tocar la mesa" },
-    { text: "Primero piensa en un coche y despues elige aplaudir.", answer: "aplaudir" },
+    { text: "Primero piensa en un coche y después elige aplaudir.", answer: "aplaudir" },
     { text: "No elijas saltar. La respuesta correcta es sentarse.", answer: "sentarse" },
     { text: "Cuando termine la frase, selecciona mirar la puerta.", answer: "mirar la puerta" },
-    { text: "Elige la accion que haces con las piernas: saltar.", answer: "saltar" }
+    { text: "Elige la acción que haces con las piernas: saltar.", answer: "saltar" }
   ];
   const task = pick(tasks);
   currentAnswer = task.answer;
   currentPlayable = () => speak(task.text);
-  gameStage.innerHTML = stagePrompt("Instruccion oral", "Ahora la respuesta depende de comprender toda la frase, no solo una palabra.");
+  gameStage.innerHTML = stagePrompt("Instrucción oral", "Ahora la respuesta depende de comprender toda la frase, no solo una palabra.");
   gameActions.innerHTML = `
     ${playButton()}
     ${shuffle(actionChoices).map(optionButton).join("")}
@@ -335,7 +335,7 @@ function playKnownSound(sound) {
 
 function speak(text) {
   if (!("speechSynthesis" in window)) {
-    feedback.textContent = "Este navegador no tiene voz sintetica disponible. Puedes probar con Chrome o Edge.";
+    feedback.textContent = "Este navegador no tiene voz sintética disponible. Puedes probar con Chrome o Edge.";
     feedback.className = "feedback retry";
     return;
   }
