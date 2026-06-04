@@ -497,6 +497,129 @@ svg {
   opacity: 0.9;
 }
 
+.stage-symbol.prompt small {
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.closed-set {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 14px;
+  width: min(100% - 32px, 620px);
+}
+
+.identification-target {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 90px;
+  padding: 18px;
+  border: 2px solid rgba(55, 97, 201, 0.24);
+  border-radius: 8px;
+  background: white;
+  color: var(--blue);
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.identification-target:hover,
+.identification-target:focus-visible {
+  border-color: var(--blue);
+  box-shadow: 0 8px 20px rgba(55, 97, 201, 0.14);
+}
+
+.choice-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(55, 97, 201, 0.1);
+}
+
+.choice-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+.comprehension-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(110px, 1fr));
+  gap: 16px;
+  width: min(100% - 32px, 680px);
+  padding: 24px 0;
+}
+
+.comprehension-target {
+  display: grid;
+  place-items: center;
+  min-height: 92px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.comprehension-target:hover,
+.comprehension-target:focus-visible {
+  border-color: var(--brand);
+  box-shadow: 0 8px 20px rgba(231, 43, 138, 0.12);
+}
+
+.shape::before {
+  content: "";
+  display: block;
+  width: 54px;
+  height: 54px;
+}
+
+.shape.blue::before {
+  background: var(--blue);
+}
+
+.shape.red::before {
+  background: #cf3f4f;
+}
+
+.shape.yellow::before {
+  background: #e4a72d;
+}
+
+.shape.circle::before {
+  border-radius: 50%;
+}
+
+.shape.triangle::before {
+  width: 0;
+  height: 0;
+  border-right: 32px solid transparent;
+  border-bottom: 56px solid #e4a72d;
+  border-left: 32px solid transparent;
+  background: transparent;
+}
+
+.object-target {
+  color: var(--brand-dark);
+}
+
+.sequence-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 800;
+}
+
 .game-actions {
   display: flex;
   flex-wrap: wrap;
@@ -630,6 +753,11 @@ svg {
 
   .canary-map {
     min-height: 360px;
+  }
+
+  .closed-set,
+  .comprehension-board {
+    grid-template-columns: 1fr;
   }
 
   .la-palma {
