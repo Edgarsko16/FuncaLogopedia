@@ -668,13 +668,73 @@ svg {
 }
 
 .site-footer {
+  padding: 48px 7vw 24px;
+  color: rgba(255, 255, 255, 0.76);
+  background: #17171d;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(180px, 0.5fr);
+  gap: 48px;
+  align-items: start;
+  padding-bottom: 36px;
+}
+
+.footer-brand {
+  max-width: 520px;
+}
+
+.footer-logo {
+  display: block;
+  width: min(300px, 100%);
+  max-height: 92px;
+  margin-bottom: 18px;
+  object-fit: contain;
+  object-position: left center;
+  filter: brightness(0) invert(1);
+}
+
+.footer-brand p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.footer-title {
+  margin: 0 0 14px;
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.footer-nav {
+  display: grid;
+  gap: 6px;
+}
+
+.footer-nav a {
+  width: fit-content;
+  padding: 6px 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-weight: 700;
+}
+
+.footer-nav a:hover,
+.footer-nav a:focus-visible {
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.footer-bottom {
   display: flex;
   justify-content: space-between;
   gap: 18px;
-  padding: 28px 7vw;
-  color: var(--muted);
-  border-top: 1px solid var(--line);
-  background: white;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 14px;
 }
 
 @keyframes pulse {
@@ -714,6 +774,7 @@ svg {
   .timeline {
     grid-template-columns: 1fr 1fr;
   }
+
 }
 
 @media (max-width: 620px) {
@@ -776,6 +837,17 @@ svg {
   }
 
   .site-footer {
+    padding: 40px 20px 22px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-bottom: 30px;
+  }
+
+  .footer-bottom {
     flex-direction: column;
+    gap: 8px;
   }
 }
