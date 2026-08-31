@@ -86,6 +86,7 @@ let playbackTimers = [];
 let activeSources = [];
 let activeAudioElements = [];
 let advanceTimer = null;
+let renderVersion = 0;
 const lastSelections = {};
 const soundCache = {};
 
@@ -134,6 +135,7 @@ function setGame(game) {
 }
 
 function renderGame() {
+  renderVersion += 1;
   stopPlayback();
   window.clearTimeout(advanceTimer);
   currentPlayable = null;
@@ -321,11 +323,15 @@ function playCurrentStimulus(button) {
   if (!currentPlayable || button.disabled) {
     return;
   }
+  const renderStamp = renderVersion;
   stopPlayback();
   setFeedback("Reproduciendo estímulo...");
   const duration = currentPlayable() || 1400;
   button.disabled = true;
   playbackTimers.push(window.setTimeout(() => {
+    if (renderStamp !== renderVersion) {
+      return;
+    }
     button.disabled = false;
     if (feedback.textContent === "Reproduciendo estímulo...") {
       setFeedback("Ahora selecciona tu respuesta.");
@@ -337,7 +343,12 @@ function checkAnswer(answer) {
   const isCorrect = answer === currentAnswer;
   setFeedback(isCorrect ? positiveFeedback : retryFeedback, isCorrect ? "ok" : "retry");
   if (isCorrect) {
-    advanceTimer = window.setTimeout(renderGame, 2200);
+    const renderStamp = renderVersion;
+    advanceTimer = window.setTimeout(() => {
+      if (renderStamp === renderVersion) {
+        renderGame();
+      }
+    }, 2200);
   }
 }
 
@@ -345,7 +356,12 @@ function checkSequenceAnswer() {
   const isCorrect = currentAnswer.every((answer, index) => answer === currentSequence[index]);
   setFeedback(isCorrect ? positiveFeedback : retryFeedback, isCorrect ? "ok" : "retry");
   if (isCorrect) {
-    advanceTimer = window.setTimeout(renderGame, 2200);
+    const renderStamp = renderVersion;
+    advanceTimer = window.setTimeout(() => {
+      if (renderStamp === renderVersion) {
+        renderGame();
+      }
+    }, 2200);
   } else {
     currentSequence = [];
     updateSequenceStatus();
@@ -468,31 +484,34 @@ function playEverydaySound(sound) {
     return playSynthesizedEverydaySound(sound);
   }
 
-  const cachedAudio = soundCache[sound] || new Audio(effect.src);
-  soundCache[sound] = cachedAudio;
-  const audio = cachedAudio.cloneNode();
-  audio.preload = "auto";
-  audio.volume = 0.9;
-  activeAudioElements.push(audio);
+  try {
+    const cachedAudio = soundCache[sound] || new Audio(effect.src);
+    soundCache[sound] = cachedAudio;
+    const audio = cachedAudio.cloneNode();
+    audio.preload = "auto";
+    audio.volume = 0.9;
+    activeAudioElements.push(audio);
 
-  audio.addEventListener("ended", () => {
-    activeAudioElements = activeAudioElements.filter((item) => item !== audio);
-  }, { once: true });
-
-  audio.addEventListener("error", () => {
-    activeAudioElements = activeAudioElements.filter((item) => item !== audio);
-    playSynthesizedEverydaySound(sound);
-  }, { once: true });
-
-  const playPromise = audio.play();
-  if (playPromise) {
-    playPromise.catch(() => {
+    const fallbackToSynth = () => {
       activeAudioElements = activeAudioElements.filter((item) => item !== audio);
       playSynthesizedEverydaySound(sound);
-    });
-  }
+    };
 
-  return effect.duration;
+    audio.addEventListener("ended", () => {
+      activeAudioElements = activeAudioElements.filter((item) => item !== audio);
+    }, { once: true });
+
+    audio.addEventListener("error", fallbackToSynth, { once: true });
+
+    const playPromise = audio.play();
+    if (playPromise) {
+      playPromise.catch(fallbackToSynth);
+    }
+
+    return effect.duration;
+  } catch (error) {
+    return playSynthesizedEverydaySound(sound);
+  }
 }
 
 // Respaldo local por Web Audio para navegadores que no puedan reproducir los MP3.
