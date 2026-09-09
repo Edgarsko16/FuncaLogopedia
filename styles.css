@@ -243,6 +243,7 @@ h3 {
   min-height: 500px;
   display: grid;
   place-items: center;
+  border-radius: 50%;
 }
 
 .sound-board {
@@ -362,10 +363,58 @@ h3 {
   place-items: center;
   width: 52px;
   height: 52px;
-  border-radius: 14px;
+  border-radius: 50%;
   background: var(--brand-soft);
   color: var(--brand-dark);
   margin-bottom: 16px;
+}
+
+.card-icon {
+  border-radius: 50%;
+  font-size: 26px;
+}
+
+.phase-icon {
+  border-radius: 50%;
+}
+
+.info-card .card-icon svg {
+  display: none;
+}
+
+.info-card .card-icon i {
+  display: none;
+}
+
+.info-card .card-icon::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  line-height: 1;
+}
+
+.info-card:nth-child(1) .card-icon::before {
+  content: "\f075";
+}
+
+.info-card:nth-child(2) .card-icon::before {
+  content: "\f086";
+}
+
+.info-card:nth-child(3) .card-icon::before {
+  content: "\f07c";
+}
+
+.info-card:nth-child(4) .card-icon::before {
+  content: "\f1ae";
+}
+
+.info-card:nth-child(5) .card-icon::before {
+  content: "\f2bb";
+}
+
+.info-card:nth-child(6) .card-icon::before,
+.info-card:nth-child(7) .card-icon::before {
+  content: "\f0c0";
 }
 
 svg {
