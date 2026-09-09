@@ -340,6 +340,22 @@ h3 {
   background: linear-gradient(180deg, #fffafc 0%, #fff4fb 100%);
 }
 
+.info-card:nth-child(3n + 1) {
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
+}
+
+.info-card:nth-child(3n + 2) {
+  background: linear-gradient(180deg, #f9fffe 0%, #edf7f7 100%);
+}
+
+.info-card:nth-child(3n) {
+  background: linear-gradient(180deg, #fffafc 0%, #fff4fb 100%);
+}
+
+.info-card:last-child:nth-child(3n + 1) {
+  grid-column: 2;
+}
+
 .card-icon,
 .phase-icon {
   display: inline-grid;
@@ -742,7 +758,7 @@ svg {
 }
 
 .site-footer {
-  background: #0b1320;
+  background: var(--brand-dark);
   color: rgba(255, 255, 255, 0.8);
   padding: 42px 7vw 26px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -774,6 +790,7 @@ svg {
   margin: 0;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
 }
 
 .footer-title {
@@ -871,6 +888,10 @@ svg {
   .service-grid,
   .timeline {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .info-card:last-child:nth-child(3n + 1) {
+    grid-column: auto;
   }
 }
 
