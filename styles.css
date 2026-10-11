@@ -714,6 +714,12 @@ svg {
   box-shadow: 0 8px 20px rgba(231, 43, 138, 0.12);
 }
 
+.identification-target:disabled,
+.comprehension-target:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .shape::before {
   content: "";
   display: block;
@@ -747,7 +753,17 @@ svg {
 }
 
 .object-target {
+  gap: 6px;
   color: var(--brand-dark);
+}
+
+.target-symbol {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.object-target strong {
+  font-size: 0.9rem;
 }
 
 .sequence-status {
@@ -788,6 +804,51 @@ svg {
 }
 
 .game-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.level-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.level-control select {
+  min-height: 38px;
+  padding: 6px 28px 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+}
+
+.level-control select:focus-visible {
+  outline: 3px solid rgba(55, 97, 201, 0.22);
+  border-color: var(--blue);
+}
+
+.instruction-transcript {
+  width: min(100% - 32px, 680px);
+  margin: 0 auto 20px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--blue);
+  border-radius: 0 8px 8px 0;
+  background: rgba(55, 97, 201, 0.08);
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.instruction-transcript[hidden] {
+  display: none;
+}
+
+.game-actions button[data-play]:disabled {
   cursor: wait;
   opacity: 0.65;
 }
