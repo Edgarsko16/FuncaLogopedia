@@ -29,6 +29,18 @@ const rehabCopy = {
     gameTitle: "Comparación de dos estímulos",
     instruction: "Escucha los dos tonos y decide si son iguales o diferentes."
   },
+  "pares-minimos": {
+    title: "Pares mínimos",
+    text: "La persona discrimina e identifica palabras reales que se diferencian en un único fonema, primero aisladas y después dentro de frases breves.",
+    gameTitle: "Discriminación e identificación de pares mínimos",
+    instruction: "Escucha la palabra o frase y elige la imagen correspondiente. Puedes repetirla o activar el apoyo textual."
+  },
+  "memoria-auditiva": {
+    title: "Memoria auditiva",
+    text: "La persona retiene y reproduce secuencias de sonidos, palabras, números o instrucciones, respetando el orden en que las ha escuchado.",
+    gameTitle: "Retención y recuerdo de secuencias auditivas",
+    instruction: "Elige una modalidad y un nivel, escucha la secuencia completa y después reproduce el orden con las alternativas visuales."
+  },
   identificacion: {
     title: "Identificación",
     text: "La persona escucha palabras o secuencias y las identifica dentro de un conjunto cerrado de opciones conocidas que puede ver desde el principio.",
@@ -78,6 +90,87 @@ const recognitionOptionCounts = {
   ambulance: 6,
   motorcycle: 6
 };
+
+const minimalPairVisuals = {
+  taza: { label: "Taza", symbol: "☕" }, casa: { label: "Casa", symbol: "🏠" },
+  moto: { label: "Moto", symbol: "🏍️" }, foto: { label: "Foto", symbol: "🖼️" },
+  gato: { label: "Gato", symbol: "🐈" }, pato: { label: "Pato", symbol: "🦆" },
+  sopa: { label: "Sopa", symbol: "🍲" }, copa: { label: "Copa", symbol: "🏆" },
+  luna: { label: "Luna", symbol: "🌙" }, cuna: { label: "Cuna", symbol: "🛏️" },
+  pila: { label: "Pila", symbol: "🔋" }, fila: { label: "Fila", symbol: "🚶‍♀️🚶" },
+  pata: { label: "Pata", symbol: "🐾" }, bata: { label: "Bata", symbol: "🥼" },
+  peso: { label: "Peso", symbol: "⚖️" }, beso: { label: "Beso", symbol: "💋" },
+  pino: { label: "Pino", symbol: "🌲" }, vino: { label: "Vino", symbol: "🍷" },
+  pala: { label: "Pala", symbol: "⛏️" }, bala: { label: "Bala", symbol: "🔫" },
+  rata: { label: "Rata", symbol: "🐀" }, lata: { label: "Lata", symbol: "🥫" },
+  rama: { label: "Rama", symbol: "🌿" }, llama: { label: "Llama", symbol: "🦙" },
+  cama: { label: "Cama", symbol: "🛌" }, cana: { label: "Cana", symbol: "👩‍🦳" },
+  pasa: { label: "Pasa", symbol: "🍇" }, masa: { label: "Masa", symbol: "🍞" },
+  pesa: { label: "Pesa", symbol: "🏋️" }, presa: { label: "Presa", symbol: "🔒" },
+  pisa: { label: "Pisa", symbol: "👣" }, prisa: { label: "Prisa", symbol: "🏃" },
+  plato: { label: "Plato", symbol: "🍽️" }, paga: { label: "Paga", symbol: "💶" },
+  plaga: { label: "Plaga", symbol: "🐜" }, coro: { label: "Coro", symbol: "🎶" },
+  cloro: { label: "Cloro", symbol: "🧴" }, cata: { label: "Cata", symbol: "🍷" },
+  carta: { label: "Carta", symbol: "✉️" }, basta: { label: "Basta", symbol: "✋" },
+  cota: { label: "Cota", symbol: "📏" }, costa: { label: "Costa", symbol: "🏖️" },
+  pelo: { label: "Pelo", symbol: "💇" }, velo: { label: "Velo", symbol: "👰" },
+  foca: { label: "Foca", symbol: "🦭" }, boca: { label: "Boca", symbol: "👄" },
+  tapa: { label: "Tapa", symbol: "🫙" }, capa: { label: "Capa", symbol: "🦸" },
+  toro: { label: "Toro", symbol: "🐂" }, gasa: { label: "Gasa", symbol: "🩹" },
+  bota: { label: "Bota", symbol: "👢" }, codo: { label: "Codo", symbol: "💪" },
+  mapa: { label: "Mapa", symbol: "🗺️" }, mata: { label: "Mata", symbol: "🌱" },
+  mesa: { label: "Mesa", symbol: "🍽️" }, pera: { label: "Pera", symbol: "🍐" },
+  pena: { label: "Pena", symbol: "😢" }, saco: { label: "Saco", symbol: "🧥" },
+  taco: { label: "Taco", symbol: "🌮" }, cura: { label: "Cura", symbol: "🩹" },
+  pito: { label: "Pito", symbol: "📯" }, palo: { label: "Palo", symbol: "🪵" },
+  manzana: { label: "Manzana", symbol: "🍎" }, barco: { label: "Barco", symbol: "⛵" }
+};
+
+// `audioSrc` es opcional: cuando se añada una grabación local, sustituirá a la voz sintética.
+const minimalPairExercises = [
+  { id: "mp-01", level: 1, contrast: "/t/–/k/", target: "taza", distractor: "casa", options: ["taza", "casa"] },
+  { id: "mp-02", level: 1, contrast: "/m/–/f/", target: "moto", distractor: "foto", options: ["moto", "foto"] },
+  { id: "mp-03", level: 1, contrast: "/g/–/p/", target: "gato", distractor: "pato", options: ["gato", "pato"] },
+  { id: "mp-04", level: 1, contrast: "/s/–/k/", target: "sopa", distractor: "copa", options: ["sopa", "copa"] },
+  { id: "mp-05", level: 1, contrast: "/l/–/k/", target: "luna", distractor: "cuna", options: ["luna", "cuna"] },
+  { id: "mp-06", level: 1, contrast: "/p/–/f/", target: "pila", distractor: "fila", options: ["pila", "fila"] },
+
+  { id: "mp-07", level: 2, contrast: "/p/–/b/", target: "pata", distractor: "bata", options: ["pata", "bata"] },
+  { id: "mp-08", level: 2, contrast: "/p/–/b/", target: "peso", distractor: "beso", options: ["peso", "beso"] },
+  { id: "mp-09", level: 2, contrast: "/p/–/b/", target: "pino", distractor: "vino", options: ["pino", "vino"] },
+  { id: "mp-10", level: 2, contrast: "/p/–/b/", target: "pala", distractor: "bala", options: ["pala", "bala"] },
+  { id: "mp-11", level: 2, contrast: "/r/–/l/", target: "rata", distractor: "lata", options: ["rata", "lata"] },
+  { id: "mp-12", level: 2, contrast: "/r/–/ʝ/", target: "rama", distractor: "llama", options: ["rama", "llama"] },
+  { id: "mp-13", level: 2, contrast: "/m/–/n/", target: "cama", distractor: "cana", options: ["cama", "cana"] },
+  { id: "mp-14", level: 2, contrast: "/p/–/m/", target: "pasa", distractor: "masa", options: ["pasa", "masa"] },
+
+  { id: "mp-15", level: 3, contrast: "/p/–/pr/", target: "pesa", distractor: "presa", options: ["pesa", "presa"] },
+  { id: "mp-16", level: 3, contrast: "/p/–/pr/", target: "pisa", distractor: "prisa", options: ["pisa", "prisa"] },
+  { id: "mp-17", level: 3, contrast: "/p/–/pl/", target: "pato", distractor: "plato", options: ["pato", "plato"] },
+  { id: "mp-18", level: 3, contrast: "/p/–/pl/", target: "paga", distractor: "plaga", options: ["paga", "plaga"] },
+  { id: "mp-19", level: 3, contrast: "/k/–/kl/", target: "coro", distractor: "cloro", options: ["coro", "cloro"] },
+  { id: "mp-20", level: 3, contrast: "sin /r/–con /r/", target: "cata", distractor: "carta", options: ["cata", "carta"] },
+  { id: "mp-21", level: 3, contrast: "sin /s/–con /s/", target: "bata", distractor: "basta", options: ["bata", "basta"] },
+  { id: "mp-22", level: 3, contrast: "sin /s/–con /s/", target: "cota", distractor: "costa", options: ["cota", "costa"] },
+
+  { id: "mp-23", level: 4, contrast: "/p/–/b/", target: "pelo", distractor: "velo", options: ["pelo", "velo"], sentence: "Veo el pelo." },
+  { id: "mp-24", level: 4, contrast: "/f/–/b/", target: "foca", distractor: "boca", options: ["foca", "boca"], sentence: "La foca nada." },
+  { id: "mp-25", level: 4, contrast: "/t/–/k/", target: "tapa", distractor: "capa", options: ["tapa", "capa"], sentence: "Busca la tapa." },
+  { id: "mp-26", level: 4, contrast: "/t/–/k/", target: "toro", distractor: "coro", options: ["toro", "coro"], sentence: "El toro corre." },
+  { id: "mp-27", level: 4, contrast: "/k/–/g/", target: "gasa", distractor: "casa", options: ["gasa", "casa"], sentence: "Necesito una gasa." },
+  { id: "mp-28", level: 4, contrast: "/t/–/k/", target: "bota", distractor: "boca", options: ["bota", "boca"], sentence: "Me pongo la bota." },
+  { id: "mp-29", level: 4, contrast: "/d/–/r/", target: "codo", distractor: "coro", options: ["codo", "coro"], sentence: "Me duele el codo." },
+  { id: "mp-30", level: 4, contrast: "/p/–/t/", target: "mapa", distractor: "mata", options: ["mapa", "mata"], sentence: "Mira el mapa." },
+
+  { id: "mp-31", level: 5, contrast: "/m/–/p/", target: "mesa", distractor: "pesa", options: ["mesa", "pesa", "casa", "taza"], sentence: "Deja el libro sobre la mesa." },
+  { id: "mp-32", level: 5, contrast: "/r/–/n/", target: "pera", distractor: "pena", options: ["pera", "pena", "manzana", "pasa"], sentence: "La pera está madura." },
+  { id: "mp-33", level: 5, contrast: "/s/–/t/", target: "saco", distractor: "taco", options: ["saco", "taco", "bota", "capa"], sentence: "Me pongo el saco." },
+  { id: "mp-34", level: 5, contrast: "/l/–/p/", target: "lata", distractor: "pata", options: ["lata", "pata", "taza", "carta"], sentence: "Abre la lata." },
+  { id: "mp-35", level: 5, contrast: "/n/–/r/", target: "cuna", distractor: "cura", options: ["cuna", "cura", "cama", "casa"], sentence: "El bebé duerme en la cuna." },
+  { id: "mp-36", level: 5, contrast: "/o/–/a/", target: "copa", distractor: "capa", options: ["copa", "capa", "taza", "bota"], sentence: "Levanta la copa." },
+  { id: "mp-37", level: 5, contrast: "/a/–/i/", target: "pato", distractor: "pito", options: ["pato", "pito", "foca", "barco"], sentence: "El pato nada en el lago." },
+  { id: "mp-38", level: 5, contrast: "/e/–/a/", target: "pelo", distractor: "palo", options: ["pelo", "palo", "rama", "velo"], sentence: "Tiene el pelo largo." }
+];
 
 const targetNames = {
   "blue-circle": "círculo azul",
@@ -247,6 +340,68 @@ const everydaySoundFiles = {
   motorcycle: { src: "sounds/motorcycle.wav", duration: 3200 }
 };
 
+const auditoryMemorySoundVisuals = {
+  dog: { label: "Perro", symbol: "🐕" },
+  car: { label: "Coche", symbol: "🚗" },
+  phone: { label: "Teléfono", symbol: "☎️" },
+  bell: { label: "Timbre", symbol: "🔔" },
+  water: { label: "Agua", symbol: "💧" },
+  rain: { label: "Lluvia", symbol: "🌧️" },
+  applause: { label: "Aplausos", symbol: "👏" },
+  birds: { label: "Pájaros", symbol: "🐦" },
+  clock: { label: "Reloj", symbol: "🕒" },
+  ambulance: { label: "Ambulancia", symbol: "🚑" },
+  door: { label: "Puerta", symbol: "🚪" },
+  motorcycle: { label: "Motocicleta", symbol: "🏍️" }
+};
+
+const auditoryMemoryWordVisuals = {
+  casa: { label: "Casa", symbol: "🏠" },
+  perro: { label: "Perro", symbol: "🐕" },
+  mesa: { label: "Mesa", symbol: "🪑" },
+  coche: { label: "Coche", symbol: "🚗" },
+  reloj: { label: "Reloj", symbol: "🕒" },
+  barco: { label: "Barco", symbol: "⛵" },
+  gato: { label: "Gato", symbol: "🐈" },
+  pato: { label: "Pato", symbol: "🦆" },
+  taza: { label: "Taza", symbol: "☕" },
+  pelota: { label: "Pelota", symbol: "⚽" },
+  libro: { label: "Libro", symbol: "📘" },
+  llave: { label: "Llave", symbol: "🔑" },
+  flor: { label: "Flor", symbol: "🌸" },
+  pan: { label: "Pan", symbol: "🍞" },
+  luna: { label: "Luna", symbol: "🌙" },
+  pez: { label: "Pez", symbol: "🐟" },
+  moto: { label: "Moto", symbol: "🏍️" },
+  puerta: { label: "Puerta", symbol: "🚪" }
+};
+
+// Cada ejercicio de instrucciones conserva por separado la solución y los distractores.
+const auditoryMemoryInstructionTasks = [
+  { id: "mi-1a", level: 1, answer: ["perro", "reloj"], options: ["perro", "reloj", "coche"] },
+  { id: "mi-1b", level: 1, answer: ["casa", "pelota"], options: ["casa", "pelota", "libro"] },
+  { id: "mi-1c", level: 1, answer: ["barco", "flor"], options: ["barco", "flor", "gato"] },
+  { id: "mi-2a", level: 2, answer: ["llave", "gato", "pan"], options: ["llave", "gato", "pan", "taza"] },
+  { id: "mi-2b", level: 2, answer: ["coche", "luna", "pez"], options: ["coche", "luna", "pez", "puerta"] },
+  { id: "mi-2c", level: 2, answer: ["libro", "pato", "mesa"], options: ["libro", "pato", "mesa", "moto"] },
+  { id: "mi-3a", level: 3, answer: ["flor", "casa", "perro", "reloj"], options: ["flor", "casa", "perro", "reloj", "barco"] },
+  { id: "mi-3b", level: 3, answer: ["pez", "pelota", "puerta", "gato"], options: ["pez", "pelota", "puerta", "gato", "pan"] },
+  { id: "mi-3c", level: 3, answer: ["taza", "moto", "llave", "luna"], options: ["taza", "moto", "llave", "luna", "libro"] },
+  { id: "mi-4a", level: 4, answer: ["barco", "mesa", "pato", "coche", "flor"], options: ["barco", "mesa", "pato", "coche", "flor", "reloj"] },
+  { id: "mi-4b", level: 4, answer: ["pan", "puerta", "perro", "libro", "pez"], options: ["pan", "puerta", "perro", "libro", "pez", "casa"] },
+  { id: "mi-4c", level: 4, answer: ["gato", "luna", "llave", "pelota", "taza"], options: ["gato", "luna", "llave", "pelota", "taza", "moto"] },
+  { id: "mi-5a", level: 5, answer: ["casa", "reloj", "barco", "perro", "flor", "llave"], options: ["casa", "reloj", "barco", "perro", "flor", "llave", "pato", "mesa"] },
+  { id: "mi-5b", level: 5, answer: ["pez", "coche", "libro", "gato", "puerta", "pan"], options: ["pez", "coche", "libro", "gato", "puerta", "pan", "luna", "taza"] },
+  { id: "mi-5c", level: 5, answer: ["moto", "pelota", "mesa", "pato", "taza", "luna"], options: ["moto", "pelota", "mesa", "pato", "taza", "luna", "casa", "reloj"] }
+];
+
+const auditoryMemoryModeLabels = {
+  sounds: "Sonidos cotidianos",
+  words: "Palabras",
+  numbers: "Números",
+  instructions: "Instrucciones"
+};
+
 const positiveFeedback = "Correcto. Esta respuesta refleja la habilidad auditiva trabajada.";
 const retryFeedback = "Inténtalo de nuevo. Vuelve a escuchar el estímulo con atención.";
 
@@ -256,6 +411,7 @@ let currentPlayable = null;
 let currentSequence = [];
 let audioContext = null;
 let playbackTimers = [];
+let playbackWaitCancels = [];
 let activeSources = [];
 let advanceTimer = null;
 let renderVersion = 0;
@@ -266,6 +422,29 @@ let currentPositiveFeedback = positiveFeedback;
 let currentRetryFeedback = retryFeedback;
 let currentTaskLevel = null;
 const exerciseLevels = { identificacion: 1, comprension: 1 };
+const minimalPairState = {
+  level: 1,
+  contrast: "all",
+  correct: 0,
+  attempts: 0,
+  lastExerciseId: null,
+  currentExerciseId: null,
+  showText: false
+};
+const auditoryMemoryState = {
+  mode: "sounds",
+  level: 1,
+  progression: "fixed",
+  numberOrder: "direct",
+  pause: 700,
+  correct: 0,
+  attempts: 0,
+  streak: 0,
+  showText: false,
+  lastExerciseId: null,
+  lastSignature: null,
+  currentExercise: null
+};
 const lastSelections = {};
 const soundCache = {};
 
@@ -277,11 +456,16 @@ const gameInstruction = document.querySelector("#game-instruction");
 const gameStage = document.querySelector("#game-stage");
 const gameActions = document.querySelector("#game-actions");
 const feedback = document.querySelector("#feedback");
+const resetGameButton = document.querySelector("#reset-game");
 
 document.querySelectorAll(".island").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".island").forEach((item) => item.classList.remove("active"));
+    document.querySelectorAll(".island").forEach((item) => {
+      item.classList.remove("active");
+      item.setAttribute("aria-pressed", "false");
+    });
     button.classList.add("active");
+    button.setAttribute("aria-pressed", "true");
     const copy = islandCopy[button.dataset.island];
     islandPanel.innerHTML = `
       <p class="panel-kicker">${copy.kicker}</p>
@@ -294,22 +478,40 @@ document.querySelectorAll(".island").forEach((button) => {
 document.querySelectorAll(".phase").forEach((button) => {
   button.addEventListener("click", () => {
     setGame(button.dataset.game);
-    document.querySelector("#juegos").scrollIntoView({ behavior: "smooth", block: "start" });
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelector("#juegos").scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
   });
 });
 
-document.querySelector("#reset-game").addEventListener("click", renderGame);
+resetGameButton.addEventListener("click", () => {
+  if (currentGame === "pares-minimos") {
+    resetMinimalPairSession();
+    return;
+  }
+  if (currentGame === "memoria-auditiva") {
+    resetAuditoryMemorySession();
+    return;
+  }
+  renderGame();
+});
 
 function setGame(game) {
   currentGame = game;
   document.querySelectorAll(".phase").forEach((item) => {
-    item.classList.toggle("active", item.dataset.game === game);
+    const isActive = item.dataset.game === game;
+    item.classList.toggle("active", isActive);
+    item.setAttribute("aria-pressed", String(isActive));
   });
   const copy = rehabCopy[game];
   rehabDetail.innerHTML = `<h3>${copy.title}</h3><p>${copy.text}</p>`;
   gameKicker.textContent = copy.title;
   gameTitle.textContent = copy.gameTitle;
   gameInstruction.textContent = copy.instruction;
+  const resetLabel = ["pares-minimos", "memoria-auditiva"].includes(game)
+    ? "Reiniciar juego y marcador"
+    : "Reiniciar ejercicio";
+  resetGameButton.setAttribute("aria-label", resetLabel);
+  resetGameButton.title = resetLabel;
   renderGame();
 }
 
@@ -330,6 +532,8 @@ function renderGame() {
   const renderers = {
     deteccion: renderDetection,
     discriminacion: renderDiscrimination,
+    "pares-minimos": renderMinimalPairs,
+    "memoria-auditiva": renderAuditoryMemory,
     identificacion: renderIdentification,
     reconocimiento: renderRecognition,
     comprension: renderComprehension
@@ -398,7 +602,7 @@ function renderIdentification() {
     ${exerciseLevelControl("identificacion", level)}
     ${playButton(task.answer.length === 1 ? "Reproducir palabra" : "Reproducir secuencia")}
     <button type="button" data-clear-sequence>Limpiar selección</button>
-    <span class="sequence-status" id="sequence-status">${sequenceStatus()}</span>
+    <span class="sequence-status" id="sequence-status" aria-live="polite" aria-atomic="true">${sequenceStatus()}</span>
   `;
 }
 
@@ -419,6 +623,297 @@ function renderRecognition() {
     `Nivel ${level}`
   );
   renderAnswerActions(options.map((sound) => ({ value: sound, label: soundNames[sound] })));
+}
+
+function renderMinimalPairs() {
+  let levelExercises = minimalPairExercises.filter((exercise) => exercise.level === minimalPairState.level);
+  const availableContrasts = [...new Set(levelExercises.map((exercise) => exercise.contrast))].sort();
+  if (minimalPairState.contrast !== "all" && !availableContrasts.includes(minimalPairState.contrast)) {
+    minimalPairState.contrast = "all";
+  }
+
+  if (minimalPairState.contrast !== "all") {
+    levelExercises = levelExercises.filter((exercise) => exercise.contrast === minimalPairState.contrast);
+  }
+
+  const exercise = pickDifferent(levelExercises, minimalPairState.lastExerciseId, (item) => item.id);
+  minimalPairState.lastExerciseId = exercise.id;
+  minimalPairState.currentExerciseId = exercise.id;
+  currentAnswer = exercise.target;
+  currentTaskLevel = exercise.level;
+  currentPlayable = (playbackVersion) => playMinimalPairStimulus(exercise, playbackVersion);
+  currentPositiveFeedback = `Correcto. Has identificado ${exercise.target}.`;
+  currentRetryFeedback = "Esa opción no coincide. Escucha de nuevo y compara el contraste fonológico.";
+
+  gameStage.innerHTML = `
+    <div class="minimal-pair-stage">
+      <div class="minimal-pair-meta" aria-label="Datos del ejercicio">
+        <span>Nivel ${exercise.level}</span>
+        <span>Contraste ${exercise.contrast}</span>
+      </div>
+      <div class="minimal-pair-options" aria-label="Alternativas visuales">
+        ${shuffle(exercise.options).map((word) => minimalPairTarget(word)).join("")}
+      </div>
+    </div>
+  `;
+  gameActions.innerHTML = `
+    ${minimalPairLevelControl()}
+    ${minimalPairContrastControl(availableContrasts)}
+    ${playButton(exercise.sentence ? "Escuchar frase" : "Escuchar palabra")}
+    <button type="button" data-toggle-pair-text aria-pressed="${minimalPairState.showText}">${minimalPairState.showText ? "Ocultar apoyo textual" : "Activar apoyo textual"}</button>
+    <span class="minimal-pair-score" id="minimal-pair-score" aria-live="polite" aria-atomic="true">${minimalPairScoreText()}</span>
+  `;
+}
+
+function minimalPairTarget(word) {
+  const visual = minimalPairVisuals[word];
+  if (!visual) {
+    return "";
+  }
+  return `
+    <button type="button" class="minimal-pair-target" data-answer="${word}" aria-label="${visual.label}">
+      <span class="minimal-pair-symbol" aria-hidden="true">${visual.symbol}</span>
+      <strong class="minimal-pair-label"${minimalPairState.showText ? "" : " hidden"}>${visual.label}</strong>
+    </button>
+  `;
+}
+
+function minimalPairLevelControl() {
+  return `
+    <label class="level-control">
+      Nivel
+      <select data-minimal-pair-level aria-label="Seleccionar nivel de pares mínimos">
+        ${[1, 2, 3, 4, 5].map((level) => `<option value="${level}"${level === minimalPairState.level ? " selected" : ""}>${level}</option>`).join("")}
+      </select>
+    </label>
+  `;
+}
+
+function minimalPairContrastControl(contrasts) {
+  return `
+    <label class="level-control">
+      Contraste
+      <select data-minimal-pair-contrast aria-label="Seleccionar contraste fonológico">
+        <option value="all">Todos</option>
+        ${contrasts.map((contrast) => `<option value="${contrast}"${contrast === minimalPairState.contrast ? " selected" : ""}>${contrast}</option>`).join("")}
+      </select>
+    </label>
+  `;
+}
+
+function renderAuditoryMemory() {
+  const exercise = createAuditoryMemoryExercise();
+  auditoryMemoryState.currentExercise = exercise;
+  currentAnswer = exercise.answer;
+  currentTaskLevel = auditoryMemoryState.level;
+  currentPlayable = (playbackVersion) => playAuditoryMemoryExercise(exercise, playbackVersion);
+  currentPositiveFeedback = "Correcto. Has recordado toda la secuencia en el orden adecuado.";
+  currentRetryFeedback = "La secuencia no coincide. Puedes revisar tu selección y volver a escucharla; la solución no se mostrará.";
+
+  gameStage.innerHTML = `
+    <div class="auditory-memory-stage">
+      <div class="auditory-memory-meta" aria-label="Configuración del ejercicio">
+        <span>Nivel ${auditoryMemoryState.level}</span>
+        <span>${auditoryMemoryModeLabels[auditoryMemoryState.mode]}</span>
+        ${auditoryMemoryState.mode === "numbers" ? `<span>Orden ${auditoryMemoryState.numberOrder === "direct" ? "directo" : "inverso"}</span>` : ""}
+        <span>${exercise.answer.length} elementos</span>
+      </div>
+      <p class="auditory-memory-prompt">Escucha la secuencia completa. Las respuestas se activarán cuando termine.</p>
+      <div class="auditory-memory-options" aria-label="Alternativas para reconstruir la secuencia">
+        ${exercise.options.map((value) => auditoryMemoryOption(value, exercise.type)).join("")}
+      </div>
+      <div class="auditory-memory-selection" aria-live="polite" aria-atomic="true">
+        <strong>Tu secuencia</strong>
+        <div id="auditory-memory-sequence">${auditoryMemorySelectionMarkup(exercise)}</div>
+      </div>
+    </div>
+  `;
+
+  gameActions.innerHTML = `
+    ${auditoryMemoryModeControl()}
+    ${auditoryMemoryLevelControl()}
+    ${auditoryMemoryProgressionControl()}
+    ${auditoryMemoryState.mode === "numbers" ? auditoryMemoryNumberOrderControl() : ""}
+    ${auditoryMemoryPauseControl()}
+    ${playButton("Escuchar secuencia")}
+    <button type="button" data-memory-delete aria-label="Borrar el último elemento seleccionado">Borrar último</button>
+    <button type="button" data-memory-confirm>Confirmar secuencia</button>
+    <button type="button" data-toggle-memory-text aria-pressed="${auditoryMemoryState.showText}">${auditoryMemoryState.showText ? "Ocultar apoyo textual" : "Activar apoyo textual"}</button>
+    <span class="auditory-memory-score" id="auditory-memory-score" aria-live="polite">${auditoryMemoryScoreText()}</span>
+  `;
+}
+
+function createAuditoryMemoryExercise() {
+  const length = auditoryMemoryState.level + 1;
+  if (auditoryMemoryState.mode === "sounds") {
+    const keys = Object.keys(auditoryMemorySoundVisuals).filter((key) => everydaySoundFiles[key]);
+    const sequence = createDifferentSequence(keys, length);
+    return {
+      type: "sounds",
+      audio: sequence,
+      answer: sequence,
+      options: createMemoryOptions(sequence, keys, Math.min(keys.length, length + 2))
+    };
+  }
+
+  if (auditoryMemoryState.mode === "words") {
+    const keys = Object.keys(auditoryMemoryWordVisuals);
+    const sequence = createDifferentSequence(keys, length);
+    return {
+      type: "words",
+      audio: sequence,
+      answer: sequence,
+      options: createMemoryOptions(sequence, keys, Math.min(keys.length, length + 2))
+    };
+  }
+
+  if (auditoryMemoryState.mode === "numbers") {
+    const sequence = createDifferentNumberSequence(length);
+    const answer = auditoryMemoryState.numberOrder === "reverse" ? [...sequence].reverse() : sequence;
+    return {
+      type: "numbers",
+      audio: sequence,
+      answer,
+      options: shuffle(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
+    };
+  }
+
+  const tasks = auditoryMemoryInstructionTasks.filter((task) => task.level === auditoryMemoryState.level);
+  const task = pickDifferent(tasks, auditoryMemoryState.lastExerciseId, (item) => item.id);
+  auditoryMemoryState.lastExerciseId = task.id;
+  auditoryMemoryState.lastSignature = task.answer.join("|");
+  return {
+    type: "instructions",
+    id: task.id,
+    audio: task.answer,
+    answer: [...task.answer],
+    options: shuffle(task.options),
+    spokenInstruction: buildAuditoryMemoryInstruction(task.answer)
+  };
+}
+
+function createDifferentSequence(pool, length) {
+  let sequence;
+  let signature;
+  let attempts = 0;
+  do {
+    sequence = shuffle(pool).slice(0, length);
+    signature = sequence.join("|");
+    attempts += 1;
+  } while (signature === auditoryMemoryState.lastSignature && attempts < 8);
+  auditoryMemoryState.lastSignature = signature;
+  return sequence;
+}
+
+function createDifferentNumberSequence(length) {
+  let sequence;
+  let signature;
+  let attempts = 0;
+  do {
+    sequence = Array.from({ length }, () => String(Math.floor(Math.random() * 10)));
+    signature = sequence.join("|");
+    attempts += 1;
+  } while (signature === auditoryMemoryState.lastSignature && attempts < 8);
+  auditoryMemoryState.lastSignature = signature;
+  return sequence;
+}
+
+function createMemoryOptions(sequence, pool, count) {
+  const uniqueSequence = [...new Set(sequence)];
+  const distractors = shuffle(pool.filter((item) => !uniqueSequence.includes(item)));
+  return shuffle([...uniqueSequence, ...distractors.slice(0, Math.max(0, count - uniqueSequence.length))]);
+}
+
+function buildAuditoryMemoryInstruction(sequence) {
+  const labels = sequence.map((key) => auditoryMemoryWordVisuals[key].label.toLowerCase());
+  const last = labels.pop();
+  const orderedList = labels.length ? `${labels.join(", ")} y finalmente ${last}` : last;
+  return `Cuando termine de hablar, recuerda y reproduce este recorrido: ${orderedList}.`;
+}
+
+function auditoryMemoryOption(value, type) {
+  const visual = auditoryMemoryVisual(value, type);
+  const alwaysShowLabel = type === "numbers";
+  return `
+    <button type="button" class="auditory-memory-option" data-memory-answer="${value}" aria-label="${visual.label}">
+      <span class="auditory-memory-symbol" aria-hidden="true">${visual.symbol}</span>
+      <strong class="auditory-memory-label"${auditoryMemoryState.showText || alwaysShowLabel ? "" : " hidden"}>${visual.label}</strong>
+    </button>
+  `;
+}
+
+function auditoryMemoryVisual(value, type) {
+  if (type === "sounds") {
+    return auditoryMemorySoundVisuals[value];
+  }
+  if (type === "numbers") {
+    return { label: value, symbol: value };
+  }
+  return auditoryMemoryWordVisuals[value];
+}
+
+function auditoryMemorySelectionMarkup(exercise = auditoryMemoryState.currentExercise) {
+  if (!currentSequence.length || !exercise) {
+    return '<span class="auditory-memory-empty">Ningún elemento seleccionado</span>';
+  }
+  return currentSequence.map((value, index) => {
+    const visual = auditoryMemoryVisual(value, exercise.type);
+    return `<span class="auditory-memory-chip"><span aria-hidden="true">${visual.symbol}</span><span class="sr-only">${index + 1}: ${visual.label}</span></span>`;
+  }).join('<span class="auditory-memory-arrow" aria-hidden="true">→</span>');
+}
+
+function auditoryMemoryModeControl() {
+  return `
+    <label class="level-control">Modalidad
+      <select data-memory-mode aria-label="Seleccionar modalidad de memoria auditiva">
+        ${Object.entries(auditoryMemoryModeLabels).map(([value, label]) => `<option value="${value}"${value === auditoryMemoryState.mode ? " selected" : ""}>${label}</option>`).join("")}
+      </select>
+    </label>
+  `;
+}
+
+function auditoryMemoryLevelControl() {
+  return `
+    <label class="level-control">Nivel
+      <select data-memory-level aria-label="Seleccionar nivel de memoria auditiva">
+        ${[1, 2, 3, 4, 5].map((level) => `<option value="${level}"${level === auditoryMemoryState.level ? " selected" : ""}>${level}</option>`).join("")}
+      </select>
+    </label>
+  `;
+}
+
+function auditoryMemoryProgressionControl() {
+  return `
+    <label class="level-control">Progresión
+      <select data-memory-progression aria-label="Seleccionar tipo de progresión">
+        <option value="fixed"${auditoryMemoryState.progression === "fixed" ? " selected" : ""}>Nivel fijo</option>
+        <option value="automatic"${auditoryMemoryState.progression === "automatic" ? " selected" : ""}>Automática: 3 aciertos</option>
+      </select>
+    </label>
+  `;
+}
+
+function auditoryMemoryNumberOrderControl() {
+  return `
+    <label class="level-control">Orden
+      <select data-memory-number-order aria-label="Seleccionar orden de recuerdo de los números">
+        <option value="direct"${auditoryMemoryState.numberOrder === "direct" ? " selected" : ""}>Directo</option>
+        <option value="reverse"${auditoryMemoryState.numberOrder === "reverse" ? " selected" : ""}>Inverso</option>
+      </select>
+    </label>
+  `;
+}
+
+function auditoryMemoryPauseControl() {
+  return `
+    <label class="level-control">Ritmo
+      <select data-memory-pause aria-label="Seleccionar pausa entre elementos">
+        <option value="400"${auditoryMemoryState.pause === 400 ? " selected" : ""}>Rápido · 0,4 s</option>
+        <option value="700"${auditoryMemoryState.pause === 700 ? " selected" : ""}>Normal · 0,7 s</option>
+        <option value="1100"${auditoryMemoryState.pause === 1100 ? " selected" : ""}>Lento · 1,1 s</option>
+      </select>
+    </label>
+  `;
 }
 
 function renderComprehension() {
@@ -446,7 +941,7 @@ function renderComprehension() {
     ${playButton("Escuchar instrucción")}
     <button type="button" data-toggle-transcript aria-expanded="false" aria-controls="instruction-transcript">Mostrar instrucción escrita</button>
     <button type="button" data-clear-sequence>Limpiar selección</button>
-    <span class="sequence-status" id="sequence-status">${sequenceStatus()}</span>
+    <span class="sequence-status" id="sequence-status" aria-live="polite" aria-atomic="true">${sequenceStatus()}</span>
   `;
 }
 
@@ -511,7 +1006,21 @@ gameActions.addEventListener("click", (event) => {
   const answer = event.target.closest("[data-answer]");
   const clear = event.target.closest("[data-clear-sequence]");
   const transcriptToggle = event.target.closest("[data-toggle-transcript]");
-  if (transcriptToggle) {
+  const pairTextToggle = event.target.closest("[data-toggle-pair-text]");
+  const memoryTextToggle = event.target.closest("[data-toggle-memory-text]");
+  const memoryDelete = event.target.closest("[data-memory-delete]");
+  const memoryConfirm = event.target.closest("[data-memory-confirm]");
+  if (memoryTextToggle) {
+    toggleAuditoryMemoryText(memoryTextToggle);
+  } else if (memoryDelete && canAnswer()) {
+    currentSequence.pop();
+    updateAuditoryMemorySelection();
+    setFeedback("");
+  } else if (memoryConfirm && canAnswer()) {
+    confirmAuditoryMemoryAnswer();
+  } else if (pairTextToggle) {
+    toggleMinimalPairText(pairTextToggle);
+  } else if (transcriptToggle) {
     toggleInstructionTranscript(transcriptToggle);
   } else if (answer && canAnswer()) {
     checkAnswer(answer.dataset.answer);
@@ -525,6 +1034,55 @@ gameActions.addEventListener("click", (event) => {
 });
 
 gameActions.addEventListener("change", (event) => {
+  const memoryMode = event.target.closest("[data-memory-mode]");
+  const memoryLevel = event.target.closest("[data-memory-level]");
+  const memoryProgression = event.target.closest("[data-memory-progression]");
+  const memoryNumberOrder = event.target.closest("[data-memory-number-order]");
+  const memoryPause = event.target.closest("[data-memory-pause]");
+  if (memoryMode) {
+    auditoryMemoryState.mode = memoryMode.value;
+    resetAuditoryMemoryExerciseHistory(true);
+    renderGame();
+    return;
+  }
+  if (memoryLevel) {
+    auditoryMemoryState.level = Number(memoryLevel.value);
+    resetAuditoryMemoryExerciseHistory(true);
+    renderGame();
+    return;
+  }
+  if (memoryProgression) {
+    auditoryMemoryState.progression = memoryProgression.value;
+    auditoryMemoryState.streak = 0;
+    renderGame();
+    return;
+  }
+  if (memoryNumberOrder) {
+    auditoryMemoryState.numberOrder = memoryNumberOrder.value;
+    resetAuditoryMemoryExerciseHistory(true);
+    renderGame();
+    return;
+  }
+  if (memoryPause) {
+    auditoryMemoryState.pause = Number(memoryPause.value);
+    renderGame();
+    return;
+  }
+  const minimalPairLevel = event.target.closest("[data-minimal-pair-level]");
+  const minimalPairContrast = event.target.closest("[data-minimal-pair-contrast]");
+  if (minimalPairLevel) {
+    minimalPairState.level = Number(minimalPairLevel.value);
+    minimalPairState.contrast = "all";
+    minimalPairState.lastExerciseId = null;
+    renderGame();
+    return;
+  }
+  if (minimalPairContrast) {
+    minimalPairState.contrast = minimalPairContrast.value;
+    minimalPairState.lastExerciseId = null;
+    renderGame();
+    return;
+  }
   const levelControl = event.target.closest("[data-exercise-level]");
   if (!levelControl) {
     return;
@@ -535,8 +1093,17 @@ gameActions.addEventListener("change", (event) => {
 });
 
 gameStage.addEventListener("click", (event) => {
+  const memoryAnswer = event.target.closest("[data-memory-answer]");
+  if (memoryAnswer && currentGame === "memoria-auditiva" && canAnswer()) {
+    if (currentSequence.length < currentAnswer.length) {
+      currentSequence.push(memoryAnswer.dataset.memoryAnswer);
+      updateAuditoryMemorySelection();
+      setFeedback("");
+    }
+    return;
+  }
   const answer = event.target.closest("[data-answer]");
-  if (answer && currentGame === "identificacion" && canAnswer()) {
+  if (answer && currentGame === "pares-minimos" && canAnswer()) {
     checkAnswer(answer.dataset.answer);
     return;
   }
@@ -610,6 +1177,13 @@ function checkAnswer(answer) {
     return;
   }
   const isCorrect = answer === currentAnswer;
+  if (currentGame === "pares-minimos") {
+    minimalPairState.attempts += 1;
+    if (isCorrect) {
+      minimalPairState.correct += 1;
+    }
+    updateMinimalPairScore();
+  }
   setFeedback(isCorrect ? currentPositiveFeedback : currentRetryFeedback, isCorrect ? "ok" : "retry");
   if (isCorrect) {
     lockAnswerAndScheduleNext();
@@ -630,13 +1204,43 @@ function checkSequenceAnswer() {
   }
 }
 
+function confirmAuditoryMemoryAnswer() {
+  if (!canAnswer() || currentSequence.length !== currentAnswer.length) {
+    return;
+  }
+
+  auditoryMemoryState.attempts += 1;
+  const isCorrect = currentAnswer.every((answer, index) => answer === currentSequence[index]);
+  if (isCorrect) {
+    auditoryMemoryState.correct += 1;
+    auditoryMemoryState.streak += 1;
+    let levelMessage = "";
+    if (auditoryMemoryState.progression === "automatic" && auditoryMemoryState.streak >= 3 && auditoryMemoryState.level < 5) {
+      auditoryMemoryState.level += 1;
+      auditoryMemoryState.streak = 0;
+      auditoryMemoryState.lastExerciseId = null;
+      auditoryMemoryState.lastSignature = null;
+      levelMessage = ` Avanzas al nivel ${auditoryMemoryState.level}.`;
+    }
+    setFeedback(`${currentPositiveFeedback}${levelMessage}`, "ok");
+    updateAuditoryMemoryScore();
+    lockAnswerAndScheduleNext();
+    return;
+  }
+
+  auditoryMemoryState.streak = 0;
+  setFeedback(currentRetryFeedback, "retry");
+  updateAuditoryMemoryScore();
+  updateGameControls();
+}
+
 function canAnswer() {
   return hasPlayedStimulus && !isStimulusPlaying && !answerLocked;
 }
 
 function updateGameControls() {
   const responsesDisabled = !canAnswer();
-  gameStage.querySelectorAll("[data-answer], [data-sequence-answer]").forEach((button) => {
+  gameStage.querySelectorAll("[data-answer], [data-sequence-answer], [data-memory-answer]").forEach((button) => {
     button.disabled = responsesDisabled;
   });
   gameActions.querySelectorAll("[data-answer], [data-clear-sequence]").forEach((button) => {
@@ -645,6 +1249,26 @@ function updateGameControls() {
   gameActions.querySelectorAll("[data-play]").forEach((button) => {
     button.disabled = isStimulusPlaying || answerLocked;
   });
+  updateAuditoryMemoryControls();
+}
+
+function updateAuditoryMemoryControls() {
+  if (currentGame !== "memoria-auditiva") {
+    return;
+  }
+  const interactionDisabled = !canAnswer();
+  const sequenceIsFull = currentSequence.length >= currentAnswer.length;
+  gameStage.querySelectorAll("[data-memory-answer]").forEach((button) => {
+    button.disabled = interactionDisabled || sequenceIsFull;
+  });
+  const deleteButton = gameActions.querySelector("[data-memory-delete]");
+  const confirmButton = gameActions.querySelector("[data-memory-confirm]");
+  if (deleteButton) {
+    deleteButton.disabled = interactionDisabled || currentSequence.length === 0;
+  }
+  if (confirmButton) {
+    confirmButton.disabled = interactionDisabled || currentSequence.length !== currentAnswer.length;
+  }
 }
 
 function lockAnswerAndScheduleNext() {
@@ -680,6 +1304,89 @@ function toggleInstructionTranscript(button) {
   button.textContent = willShow ? "Ocultar instrucción escrita" : "Mostrar instrucción escrita";
 }
 
+function toggleMinimalPairText(button) {
+  minimalPairState.showText = !minimalPairState.showText;
+  gameStage.querySelectorAll(".minimal-pair-label").forEach((label) => {
+    label.hidden = !minimalPairState.showText;
+  });
+  button.setAttribute("aria-pressed", String(minimalPairState.showText));
+  button.textContent = minimalPairState.showText ? "Ocultar apoyo textual" : "Activar apoyo textual";
+}
+
+function minimalPairScoreText() {
+  return `Aciertos: ${minimalPairState.correct} · Intentos: ${minimalPairState.attempts}`;
+}
+
+function updateMinimalPairScore() {
+  const score = document.querySelector("#minimal-pair-score");
+  if (score) {
+    score.textContent = minimalPairScoreText();
+  }
+}
+
+function resetMinimalPairSession() {
+  minimalPairState.level = 1;
+  minimalPairState.contrast = "all";
+  minimalPairState.correct = 0;
+  minimalPairState.attempts = 0;
+  minimalPairState.lastExerciseId = null;
+  minimalPairState.currentExerciseId = null;
+  minimalPairState.showText = false;
+  renderGame();
+}
+
+function toggleAuditoryMemoryText(button) {
+  auditoryMemoryState.showText = !auditoryMemoryState.showText;
+  const alwaysVisible = auditoryMemoryState.currentExercise?.type === "numbers";
+  gameStage.querySelectorAll(".auditory-memory-label").forEach((label) => {
+    label.hidden = !auditoryMemoryState.showText && !alwaysVisible;
+  });
+  button.setAttribute("aria-pressed", String(auditoryMemoryState.showText));
+  button.textContent = auditoryMemoryState.showText ? "Ocultar apoyo textual" : "Activar apoyo textual";
+}
+
+function auditoryMemoryScoreText() {
+  const mode = auditoryMemoryModeLabels[auditoryMemoryState.mode];
+  const progress = auditoryMemoryState.progression === "automatic"
+    ? `${auditoryMemoryState.streak}/3 para subir`
+    : `racha ${auditoryMemoryState.streak}`;
+  return `Aciertos: ${auditoryMemoryState.correct} · Intentos: ${auditoryMemoryState.attempts} · ${progress} · Nivel ${auditoryMemoryState.level} · ${mode}`;
+}
+
+function updateAuditoryMemoryScore() {
+  const score = document.querySelector("#auditory-memory-score");
+  if (score) {
+    score.textContent = auditoryMemoryScoreText();
+  }
+}
+
+function updateAuditoryMemorySelection() {
+  const selection = document.querySelector("#auditory-memory-sequence");
+  if (selection) {
+    selection.innerHTML = auditoryMemorySelectionMarkup();
+  }
+  updateAuditoryMemoryControls();
+}
+
+function resetAuditoryMemoryExerciseHistory(resetStreak = false) {
+  auditoryMemoryState.lastExerciseId = null;
+  auditoryMemoryState.lastSignature = null;
+  auditoryMemoryState.currentExercise = null;
+  if (resetStreak) {
+    auditoryMemoryState.streak = 0;
+  }
+}
+
+function resetAuditoryMemorySession() {
+  auditoryMemoryState.level = 1;
+  auditoryMemoryState.correct = 0;
+  auditoryMemoryState.attempts = 0;
+  auditoryMemoryState.streak = 0;
+  auditoryMemoryState.showText = false;
+  resetAuditoryMemoryExerciseHistory();
+  renderGame();
+}
+
 function clearAdvanceTimer() {
   if (advanceTimer !== null) {
     window.clearTimeout(advanceTimer);
@@ -709,6 +1416,9 @@ function setFeedback(message, state = "") {
 function stopPlayback() {
   playbackTimers.forEach((timer) => window.clearTimeout(timer));
   playbackTimers = [];
+  const pendingWaits = [...playbackWaitCancels];
+  playbackWaitCancels = [];
+  pendingWaits.forEach((cancel) => cancel());
   activeSources.forEach((source) => {
     try {
       source.stop();
@@ -793,6 +1503,92 @@ function playTonePair(tones) {
   return 2200;
 }
 
+async function playAuditoryMemoryExercise(exercise, playbackVersion) {
+  if (exercise.type === "instructions") {
+    return speak(exercise.spokenInstruction);
+  }
+
+  for (let index = 0; index < exercise.audio.length; index += 1) {
+    if (playbackVersion !== renderVersion || !isStimulusPlaying) {
+      return null;
+    }
+
+    const item = exercise.audio[index];
+    if (exercise.type === "sounds") {
+      const duration = await playEverydaySound(item, playbackVersion);
+      if (!Number.isFinite(duration)) {
+        return null;
+      }
+      const soundCompleted = await waitDuringPlayback(duration, playbackVersion);
+      if (!soundCompleted) {
+        return null;
+      }
+    } else {
+      const spokenText = exercise.type === "numbers" ? item : auditoryMemoryWordVisuals[item].label;
+      const speechResult = await speak(spokenText);
+      if (speechResult === null || playbackVersion !== renderVersion) {
+        return null;
+      }
+    }
+
+    if (index < exercise.audio.length - 1) {
+      const pauseCompleted = await waitDuringPlayback(auditoryMemoryState.pause, playbackVersion);
+      if (!pauseCompleted) {
+        return null;
+      }
+    }
+  }
+  return 0;
+}
+
+function waitDuringPlayback(duration, playbackVersion) {
+  return new Promise((resolve) => {
+    let settled = false;
+    let timer = null;
+
+    const finish = (completed) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      if (timer !== null) {
+        window.clearTimeout(timer);
+        playbackTimers = playbackTimers.filter((item) => item !== timer);
+      }
+      playbackWaitCancels = playbackWaitCancels.filter((cancel) => cancel !== cancelWait);
+      resolve(completed);
+    };
+
+    const cancelWait = () => finish(false);
+    timer = window.setTimeout(() => {
+      finish(playbackVersion === renderVersion && isStimulusPlaying);
+    }, duration);
+    playbackTimers.push(timer);
+    playbackWaitCancels.push(cancelWait);
+  });
+}
+
+async function playMinimalPairStimulus(exercise, playbackVersion) {
+  const spokenText = exercise.sentence || exercise.target;
+  if (!exercise.audioSrc) {
+    return speak(spokenText);
+  }
+
+  try {
+    return await playLocalAudioBuffer(
+      `minimal-pair:${exercise.id}`,
+      exercise.audioSrc,
+      exercise.audioDuration || 8000,
+      playbackVersion
+    );
+  } catch (error) {
+    if (playbackVersion !== renderVersion || !isStimulusPlaying) {
+      return null;
+    }
+    return speak(spokenText);
+  }
+}
+
 async function playEverydaySound(sound, playbackVersion) {
   const effect = everydaySoundFiles[sound];
   if (!effect) {
@@ -809,23 +1605,7 @@ async function playEverydaySound(sound, playbackVersion) {
   };
 
   try {
-    const context = ensureAudio();
-    const buffer = await loadEverydaySound(sound, effect.src, context);
-    if (playbackVersion !== renderVersion || !isStimulusPlaying) {
-      return null;
-    }
-
-    const source = context.createBufferSource();
-    const gain = context.createGain();
-    source.buffer = buffer;
-    gain.gain.value = 0.9;
-    source.connect(gain);
-    gain.connect(context.destination);
-    const playbackDuration = Math.min(buffer.duration * 1000, effect.duration);
-    source.start();
-    source.stop(context.currentTime + playbackDuration / 1000);
-    trackSource(source);
-    return Math.ceil(playbackDuration);
+    return await playLocalAudioBuffer(sound, effect.src, effect.duration, playbackVersion);
   } catch (error) {
     if (playbackVersion !== renderVersion || !isStimulusPlaying) {
       return null;
@@ -834,9 +1614,29 @@ async function playEverydaySound(sound, playbackVersion) {
   }
 }
 
-function loadEverydaySound(sound, src, context) {
-  if (!soundCache[sound]) {
-    soundCache[sound] = new Promise((resolve, reject) => {
+async function playLocalAudioBuffer(cacheKey, src, maximumDuration, playbackVersion) {
+  const context = ensureAudio();
+  const buffer = await loadLocalSound(cacheKey, src, context);
+  if (playbackVersion !== renderVersion || !isStimulusPlaying) {
+    return null;
+  }
+
+  const source = context.createBufferSource();
+  const gain = context.createGain();
+  source.buffer = buffer;
+  gain.gain.value = 0.9;
+  source.connect(gain);
+  gain.connect(context.destination);
+  const playbackDuration = Math.min(buffer.duration * 1000, maximumDuration);
+  source.start();
+  source.stop(context.currentTime + playbackDuration / 1000);
+  trackSource(source);
+  return Math.ceil(playbackDuration);
+}
+
+function loadLocalSound(cacheKey, src, context) {
+  if (!soundCache[cacheKey]) {
+    soundCache[cacheKey] = new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
       request.open("GET", src);
       request.responseType = "arraybuffer";
@@ -851,11 +1651,11 @@ function loadEverydaySound(sound, src, context) {
       request.addEventListener("error", () => reject(new Error(`No se pudo cargar ${src}`)), { once: true });
       request.send();
     }).catch((error) => {
-      delete soundCache[sound];
+      delete soundCache[cacheKey];
       throw error;
     });
   }
-  return soundCache[sound];
+  return soundCache[cacheKey];
 }
 
 // Respaldo por Web Audio para navegadores que no puedan cargar el archivo local.
@@ -976,6 +1776,7 @@ function speak(text) {
   utterance.pitch = 1;
   return new Promise((resolve, reject) => {
     let finished = false;
+    let cancelSpeech = null;
     const safetyDuration = Math.max(4000, text.length * 140);
     const safetyTimer = window.setTimeout(() => finish(0), safetyDuration);
     playbackTimers.push(safetyTimer);
@@ -987,9 +1788,12 @@ function speak(text) {
       finished = true;
       window.clearTimeout(safetyTimer);
       playbackTimers = playbackTimers.filter((timer) => timer !== safetyTimer);
+      playbackWaitCancels = playbackWaitCancels.filter((cancel) => cancel !== cancelSpeech);
       resolve(duration);
     }
 
+    cancelSpeech = () => finish(null);
+    playbackWaitCancels.push(cancelSpeech);
     utterance.addEventListener("end", () => finish(0), { once: true });
     utterance.addEventListener("error", (event) => {
       if (["canceled", "interrupted"].includes(event.error)) {
@@ -1012,10 +1816,12 @@ function pickDifferent(items, previous, getKey = (item) => item) {
 }
 
 function shuffle(items) {
-  return items
-    .map((item) => ({ item, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ item }) => item);
+  const shuffledItems = [...items];
+  for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffledItems[index], shuffledItems[randomIndex]] = [shuffledItems[randomIndex], shuffledItems[index]];
+  }
+  return shuffledItems;
 }
 
 function capitalize(text) {
