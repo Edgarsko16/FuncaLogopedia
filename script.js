@@ -358,7 +358,7 @@ const auditoryMemorySoundVisuals = {
 const auditoryMemoryWordVisuals = {
   casa: { label: "Casa", symbol: "🏠" },
   perro: { label: "Perro", symbol: "🐕" },
-  mesa: { label: "Mesa", symbol: "🪑" },
+  mesa: { label: "Mesa", symbol: "🍽️" },
   coche: { label: "Coche", symbol: "🚗" },
   reloj: { label: "Reloj", symbol: "🕒" },
   barco: { label: "Barco", symbol: "⛵" },
@@ -1591,7 +1591,7 @@ async function playMinimalPairStimulus(exercise, playbackVersion) {
 
 async function playEverydaySound(sound, playbackVersion) {
   const effect = everydaySoundFiles[sound];
-  if (!effect) {
+  if (!effect || !navigator.onLine) {
     return playSynthesizedEverydaySound(sound);
   }
 
@@ -1640,6 +1640,7 @@ function loadLocalSound(cacheKey, src, context) {
       const request = new XMLHttpRequest();
       request.open("GET", src);
       request.responseType = "arraybuffer";
+      request.timeout = 6000;
       request.addEventListener("load", () => {
         const successfulStatus = request.status === 0 || (request.status >= 200 && request.status < 300);
         if (!successfulStatus || !request.response) {
@@ -1649,6 +1650,7 @@ function loadLocalSound(cacheKey, src, context) {
         context.decodeAudioData(request.response.slice(0)).then(resolve, reject);
       }, { once: true });
       request.addEventListener("error", () => reject(new Error(`No se pudo cargar ${src}`)), { once: true });
+      request.addEventListener("timeout", () => reject(new Error(`Se agotó el tiempo de carga de ${src}`)), { once: true });
       request.send();
     }).catch((error) => {
       delete soundCache[cacheKey];
@@ -1778,10 +1780,13 @@ function speak(text) {
     let finished = false;
     let cancelSpeech = null;
     const safetyDuration = Math.max(4000, text.length * 140);
-    const safetyTimer = window.setTimeout(() => finish(0), safetyDuration);
+    const safetyTimer = window.setTimeout(() => {
+      window.speechSynthesis.cancel();
+      fail(new Error("La voz del navegador no ha respondido a tiempo."));
+    }, safetyDuration);
     playbackTimers.push(safetyTimer);
 
-    function finish(duration) {
+    function settle(callback, value) {
       if (finished) {
         return;
       }
@@ -1789,8 +1794,11 @@ function speak(text) {
       window.clearTimeout(safetyTimer);
       playbackTimers = playbackTimers.filter((timer) => timer !== safetyTimer);
       playbackWaitCancels = playbackWaitCancels.filter((cancel) => cancel !== cancelSpeech);
-      resolve(duration);
+      callback(value);
     }
+
+    const finish = (duration) => settle(resolve, duration);
+    const fail = (error) => settle(reject, error);
 
     cancelSpeech = () => finish(null);
     playbackWaitCancels.push(cancelSpeech);
@@ -1800,7 +1808,7 @@ function speak(text) {
         finish(null);
         return;
       }
-      reject(new Error(`No se pudo reproducir la instrucción: ${event.error}`));
+      fail(new Error(`No se pudo reproducir la instrucción: ${event.error}`));
     }, { once: true });
     window.speechSynthesis.speak(utterance);
   });
