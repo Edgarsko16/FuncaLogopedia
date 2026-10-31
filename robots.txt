@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://funcasor-logopedia.netlify.app/sitemap.xml

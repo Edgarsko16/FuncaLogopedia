@@ -2,17 +2,17 @@ const islandCopy = {
   "la-palma": {
     kicker: "La Palma",
     title: "Atención cercana y seguimiento coordinado",
-    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicación a las necesidades de la persona y su entorno familiar, educativo o laboral. <br><strong>¿Necesitas ayuda logopédica? Llama al 618 394 750 o contacta por email a <a href='mailto:logopedialapalma@funcasor.org'>logopedialapalma@funcasor.org</a>"
+    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicación a cada persona y a su entorno. Dirección: [DIRECCIÓN LA PALMA]. Mapa: [ENLACE A MAPA]. Horario: [HORARIO]. Contacto: [TELÉFONO] · [CORREO]."
   },
   tenerife: {
     kicker: "Tenerife",
     title: "Intervención especializada y recursos compartidos",
-    text: "La isla funciona como un punto clave para valorar necesidades, planificar sesiones y coordinar apoyos con familias, centros educativos y otros profesionales. <br><strong>¿Necesitas ayuda logopédica? Llama al 646 210 763 o contacta por email a <a href='mailto:logopediatenerife@funcasor.org'>logopediatenerife@funcasor.org</a>"
+    text: "Valoramos necesidades, planificamos sesiones y coordinamos apoyos con familias y profesionales. Dirección: [DIRECCIÓN TENERIFE]. Mapa: [ENLACE A MAPA]. Horario: [HORARIO]. Contacto: [TELÉFONO] · [CORREO]."
   },
   "gran-canaria": {
     kicker: "Gran Canaria",
     title: "Rehabilitación auditiva orientada a la participación",
-    text: "El trabajo logopédico se centra en que la persona use la audición y el lenguaje en conversaciones, rutinas, aprendizaje y autonomía diaria. <br><strong>¿Necesitas ayuda logopédica? Llama al 646 964 470 o contacta por email a <a href='mailto:logopediagc@funcasor.org'>logopediagc@funcasor.org</a>"
+    text: "Trabajamos la escucha y el lenguaje para la vida diaria. Dirección: [DIRECCIÓN GRAN CANARIA]. Mapa: [ENLACE A MAPA]. Horario: [HORARIO]. Contacto: [TELÉFONO] · [CORREO]."
   }
 };
 
@@ -25,37 +25,37 @@ const rehabCopy = {
   },
   discriminacion: {
     title: "Discriminación",
-    text: "La persona compara dos estímulos y percibe si son iguales o diferentes atendiendo a rasgos como altura, duración o intensidad.",
+    text: "La persona compara dos sonidos. Decide si son iguales o diferentes por su altura, duración o intensidad.",
     gameTitle: "Comparación de dos estímulos",
     instruction: "Escucha los dos tonos y decide si son iguales o diferentes."
   },
   "pares-minimos": {
     title: "Pares mínimos",
-    text: "La persona discrimina e identifica palabras reales que se diferencian en un único fonema, primero aisladas y después dentro de frases breves.",
+    text: "La persona compara palabras que cambian en un solo sonido. Fonema significa sonido de una lengua. Primero trabaja palabras sueltas y luego frases breves.",
     gameTitle: "Discriminación e identificación de pares mínimos",
     instruction: "Escucha la palabra o frase y elige la imagen correspondiente. Puedes repetirla o activar el apoyo textual."
   },
   "memoria-auditiva": {
     title: "Memoria auditiva",
-    text: "La persona retiene y reproduce secuencias de sonidos, palabras, números o instrucciones, respetando el orden en que las ha escuchado.",
+    text: "La persona recuerda sonidos, palabras, números o instrucciones. Después los repite en el mismo orden.",
     gameTitle: "Retención y recuerdo de secuencias auditivas",
     instruction: "Elige una modalidad y un nivel, escucha la secuencia completa y después reproduce el orden con las alternativas visuales."
   },
   identificacion: {
     title: "Identificación",
-    text: "La persona escucha palabras o secuencias y las identifica dentro de un conjunto cerrado de opciones conocidas que puede ver desde el principio.",
+    text: "La persona escucha una palabra o una secuencia. La elige entre varias opciones que ve desde el principio.",
     gameTitle: "Elección dentro de un conjunto cerrado",
     instruction: "Observa el conjunto de opciones, escucha la palabra o secuencia y selecciona sus elementos en el mismo orden."
   },
   reconocimiento: {
     title: "Reconocimiento",
-    text: "La persona reconoce un sonido cotidiano sin recibir una pista previa clara sobre cuál va a escuchar.",
+    text: "La persona escucha un sonido cotidiano sin saber antes cuál va a sonar. Después dice qué ha oído.",
     gameTitle: "Reconocimiento de sonidos cotidianos",
     instruction: "Escucha el estímulo sin pista previa y responde: ¿qué has escuchado?"
   },
   comprension: {
     title: "Comprensión",
-    text: "La persona procesa una instrucción oral completa y responde teniendo en cuenta acción, objeto, color y, en ocasiones, el orden.",
+    text: "La persona escucha una instrucción y la sigue. Puede incluir una acción, un objeto, un color o varios pasos.",
     gameTitle: "Comprensión de instrucciones orales",
     instruction: "Escucha la instrucción completa y realiza la acción indicada. Puedes mostrar el texto como apoyo accesible."
   }
@@ -410,6 +410,9 @@ let currentAnswer = null;
 let currentPlayable = null;
 let currentSequence = [];
 let audioContext = null;
+let masterGain = null;
+let volumeLevel = 0.7;
+let identificationShowText = true;
 let playbackTimers = [];
 let playbackWaitCancels = [];
 let activeSources = [];
@@ -456,6 +459,8 @@ const gameInstruction = document.querySelector("#game-instruction");
 const gameStage = document.querySelector("#game-stage");
 const gameActions = document.querySelector("#game-actions");
 const feedback = document.querySelector("#feedback");
+const playbackStatus = document.querySelector("#playback-status");
+const exerciseVolume = document.querySelector("#exercise-volume");
 const resetGameButton = document.querySelector("#reset-game");
 
 document.querySelectorAll(".island").forEach((button) => {
@@ -473,6 +478,48 @@ document.querySelectorAll(".island").forEach((button) => {
       <p>${copy.text}</p>
     `;
   });
+});
+
+exerciseVolume.addEventListener("input", () => {
+  volumeLevel = Number(exerciseVolume.value) / 100;
+  if (masterGain && audioContext) masterGain.gain.setTargetAtTime(volumeLevel, audioContext.currentTime, 0.02);
+});
+
+const contactForm = document.querySelector(".contact-form");
+contactForm.addEventListener("submit", (event) => {
+  let firstInvalid = null;
+  contactForm.querySelectorAll("[required]").forEach((field) => {
+    const error = document.querySelector(`#${field.id}-error`);
+    let message = "";
+    if (!field.checked && field.type === "checkbox") message = "Debes aceptar la información de privacidad para enviar la solicitud.";
+    else if (!field.value.trim()) message = "Completa este campo.";
+    if (field.id === "contacto-dato" && field.value.trim()) {
+      const value = field.value.trim();
+      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      const validPhone = (value.match(/\d/g) || []).length >= 6;
+      if (!validEmail && !validPhone) message = "Escribe un correo válido o un teléfono con al menos seis cifras.";
+    }
+    if (error) error.textContent = message;
+    field.setAttribute("aria-invalid", String(Boolean(message)));
+    if (message && !firstInvalid) firstInvalid = field;
+  });
+  if (firstInvalid) {
+    event.preventDefault();
+    firstInvalid.focus();
+  }
+});
+
+contactForm.addEventListener("input", (event) => {
+  const field = event.target;
+  const error = field.id && document.querySelector(`#${field.id}-error`);
+  if (error) error.textContent = "";
+  if (field.id) field.removeAttribute("aria-invalid");
+});
+contactForm.addEventListener("change", (event) => {
+  const field = event.target;
+  const error = field.id && document.querySelector(`#${field.id}-error`);
+  if (error) error.textContent = "";
+  if (field.id) field.removeAttribute("aria-invalid");
 });
 
 document.querySelectorAll(".phase").forEach((button) => {
@@ -523,6 +570,7 @@ function renderGame() {
   currentSequence = [];
   hasPlayedStimulus = false;
   isStimulusPlaying = false;
+  playbackStatus.textContent = "Audio detenido";
   answerLocked = false;
   currentPositiveFeedback = positiveFeedback;
   currentRetryFeedback = retryFeedback;
@@ -549,9 +597,10 @@ function renderDetection() {
   currentPlayable = stimulus === "sound" ? playDetectionTone : () => 850;
   gameStage.innerHTML = stagePrompt(
     "¿Hay sonido o silencio?",
-    "La única pista válida será lo que escuches al pulsar reproducir.",
+    "Pulsa reproducir. El texto indica si hay sonido o silencio.",
     "Escucha atenta"
   );
+  gameStage.insertAdjacentHTML("beforeend", `<p class="stimulus-status" id="stimulus-status">Cuando reproduzcas, verás el estado aquí.</p>`);
   renderAnswerActions([
     { value: "sound", label: "Hay sonido" },
     { value: "quiet", label: "Silencio" }
@@ -601,6 +650,7 @@ function renderIdentification() {
   gameActions.innerHTML = `
     ${exerciseLevelControl("identificacion", level)}
     ${playButton(task.answer.length === 1 ? "Reproducir palabra" : "Reproducir secuencia")}
+    <button type="button" data-toggle-identification-text aria-pressed="${identificationShowText}">${identificationShowText ? "Ocultar palabras" : "Mostrar palabras"}</button>
     <button type="button" data-clear-sequence>Limpiar selección</button>
     <span class="sequence-status" id="sequence-status" aria-live="polite" aria-atomic="true">${sequenceStatus()}</span>
   `;
@@ -964,7 +1014,7 @@ function identificationTarget(value) {
   return `
     <button type="button" class="identification-target" data-sequence-answer="${value}" aria-label="${target.label}">
       <span class="target-symbol" aria-hidden="true">${target.symbol}</span>
-      <strong>${target.label}</strong>
+      <strong class="identification-label"${identificationShowText ? "" : " hidden"}>${target.label}</strong>
     </button>
   `;
 }
@@ -1008,10 +1058,16 @@ gameActions.addEventListener("click", (event) => {
   const transcriptToggle = event.target.closest("[data-toggle-transcript]");
   const pairTextToggle = event.target.closest("[data-toggle-pair-text]");
   const memoryTextToggle = event.target.closest("[data-toggle-memory-text]");
+  const identificationTextToggle = event.target.closest("[data-toggle-identification-text]");
   const memoryDelete = event.target.closest("[data-memory-delete]");
   const memoryConfirm = event.target.closest("[data-memory-confirm]");
   if (memoryTextToggle) {
     toggleAuditoryMemoryText(memoryTextToggle);
+  } else if (identificationTextToggle) {
+    identificationShowText = !identificationShowText;
+    gameStage.querySelectorAll(".identification-label").forEach((label) => { label.hidden = !identificationShowText; });
+    identificationTextToggle.setAttribute("aria-pressed", String(identificationShowText));
+    identificationTextToggle.textContent = identificationShowText ? "Ocultar palabras" : "Mostrar palabras";
   } else if (memoryDelete && canAnswer()) {
     currentSequence.pop();
     updateAuditoryMemorySelection();
@@ -1126,6 +1182,9 @@ function playCurrentStimulus(button) {
   const renderStamp = renderVersion;
   stopPlayback();
   isStimulusPlaying = true;
+  playbackStatus.textContent = "Reproduciendo audio";
+  const detectionStatus = document.querySelector("#stimulus-status");
+  if (detectionStatus && currentGame === "deteccion") detectionStatus.textContent = currentAnswer === "sound" ? "🔊 Hay sonido" : "⏸ No hay sonido";
   updateGameControls();
   setFeedback("Reproduciendo estímulo...");
 
@@ -1146,6 +1205,7 @@ function playCurrentStimulus(button) {
       }
       if (!Number.isFinite(duration) || duration < 0) {
         isStimulusPlaying = false;
+        playbackStatus.textContent = "Audio detenido. Puedes intentarlo de nuevo.";
         updateGameControls();
         return;
       }
@@ -1156,6 +1216,7 @@ function playCurrentStimulus(button) {
         }
         hasPlayedStimulus = true;
         isStimulusPlaying = false;
+        playbackStatus.textContent = "Audio detenido. Puedes repetirlo.";
         updateGameControls();
         if (feedback.textContent === "Reproduciendo estímulo...") {
           setFeedback("Ahora selecciona tu respuesta.");
@@ -1167,6 +1228,7 @@ function playCurrentStimulus(button) {
         return;
       }
       isStimulusPlaying = false;
+      playbackStatus.textContent = "No se pudo reproducir el audio. Puedes intentarlo de nuevo.";
       updateGameControls();
       setFeedback("No se ha podido reproducir el estímulo. Inténtalo de nuevo.", "retry");
     });
@@ -1435,6 +1497,9 @@ function stopPlayback() {
 function ensureAudio() {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioContext.createGain();
+    masterGain.gain.value = volumeLevel;
+    masterGain.connect(audioContext.destination);
   }
   if (audioContext.state === "suspended") {
     audioContext.resume();
@@ -1452,7 +1517,7 @@ function tone({ frequency = 520, start, duration = 0.35, type = "sine", volume =
   gain.gain.exponentialRampToValueAtTime(volume, start + 0.02);
   gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
   oscillator.connect(gain);
-  gain.connect(context.destination);
+  gain.connect(masterGain);
   oscillator.start(start);
   oscillator.stop(start + duration + 0.03);
   trackSource(oscillator);
@@ -1476,7 +1541,7 @@ function noise({ start, duration = 0.8, frequency = 1500, filterType = "bandpass
   gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
   source.connect(filter);
   filter.connect(gain);
-  gain.connect(context.destination);
+  gain.connect(masterGain);
   source.start(start);
   source.stop(start + duration + 0.02);
   trackSource(source);
@@ -1626,7 +1691,7 @@ async function playLocalAudioBuffer(cacheKey, src, maximumDuration, playbackVers
   source.buffer = buffer;
   gain.gain.value = 0.9;
   source.connect(gain);
-  gain.connect(context.destination);
+  gain.connect(masterGain);
   const playbackDuration = Math.min(buffer.duration * 1000, maximumDuration);
   source.start();
   source.stop(context.currentTime + playbackDuration / 1000);
@@ -1776,6 +1841,7 @@ function speak(text) {
   utterance.lang = "es-ES";
   utterance.rate = 0.82;
   utterance.pitch = 1;
+  utterance.volume = volumeLevel;
   return new Promise((resolve, reject) => {
     let finished = false;
     let cancelSpeech = null;
