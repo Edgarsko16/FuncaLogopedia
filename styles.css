@@ -72,7 +72,7 @@ button {
 .brand-mark {
   width: 42px;
   height: 42px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 10px;
   border: 1px solid var(--line);
 }
@@ -355,7 +355,6 @@ h3 {
 }
 
 .info-card p { line-height: 1.65; }
-.service-cta { display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; color: var(--brand-dark); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
 .info-card:nth-child(3n) {
   background: linear-gradient(180deg, #fffafc 0%, #fff4fb 100%);
