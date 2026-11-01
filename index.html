@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@graph":[{"@type":"MedicalBusiness","name":"Servicio de Logopedia Funcasor en Tenerife","address":"[DIRECCIÓN TENERIFE]","hasMap":"[ENLACE A MAPA TENERIFE]","openingHours":"[HORARIO TENERIFE]","telephone":"[TELÉFONO TENERIFE]","email":"[CORREO TENERIFE]"},{"@type":"MedicalBusiness","name":"Servicio de Logopedia Funcasor en Gran Canaria","address":"[DIRECCIÓN GRAN CANARIA]","hasMap":"[ENLACE A MAPA GRAN CANARIA]","openingHours":"[HORARIO GRAN CANARIA]","telephone":"[TELÉFONO GRAN CANARIA]","email":"[CORREO GRAN CANARIA]"},{"@type":"MedicalBusiness","name":"Servicio de Logopedia Funcasor en La Palma","address":"[DIRECCIÓN LA PALMA]","hasMap":"[ENLACE A MAPA LA PALMA]","openingHours":"[HORARIO LA PALMA]","telephone":"[TELÉFONO LA PALMA]","email":"[CORREO LA PALMA]"}]}
+  {"@context":"https://schema.org","@graph":[{"@type":"MedicalBusiness","name":"Servicio de Logopedia Funcasor en Tenerife","telephone":"+34 658 889 126","email":"funcasor@funcasor.org","address":{"@type":"PostalAddress","streetAddress":"Carretera General La Laguna-Punta del Hidalgo, km 8,1","addressLocality":"Tegueste","addressRegion":"Santa Cruz de Tenerife","postalCode":"38280","addressCountry":"ES"}},{"@type":"MedicalBusiness","name":"Servicio de Logopedia Funcasor en Gran Canaria","telephone":"+34 616 834 008","email":"grancanaria@funcasor.org","address":[{"@type":"PostalAddress","streetAddress":"Calle Antonio Manchado Viglietti, 1","addressLocality":"Las Palmas de Gran Canaria","postalCode":"35005","addressCountry":"ES"},{"@type":"PostalAddress","streetAddress":"Calle Escenógrafo Ramón Sánchez Prats, 64","addressLocality":"Las Palmas de Gran Canaria","postalCode":"35018","addressCountry":"ES"}]},{"@type":"MedicalBusiness","name":"Servicio de Logopedia Funcasor en La Palma","telephone":"+34 618 376 073","email":"lapalma@funcasor.org","address":[{"@type":"PostalAddress","streetAddress":"Plaza de la Constitución, 4, Edificio de Usos Múltiples, 6.ª planta","addressLocality":"Santa Cruz de La Palma","postalCode":"38700","addressCountry":"ES"},{"@type":"PostalAddress","streetAddress":"Calle Pedro Miguel Hernández Camacho, 51","addressLocality":"Los Llanos de Aridane","postalCode":"38760","addressCountry":"ES"}]}]}
   </script>
 </head>
 <body>
@@ -160,11 +160,15 @@
           <p class="panel-kicker">La Palma</p>
           <h3>Atención cercana y seguimiento coordinado</h3>
           <p>El servicio adapta los objetivos de escucha, lenguaje y comunicación a cada persona y a su entorno.</p>
-          <p><strong>Dirección:</strong> [DIRECCIÓN LA PALMA] · <strong>Mapa:</strong> [ENLACE A MAPA] · <strong>Horario:</strong> [HORARIO]</p>
-          <p>Atención presencial y orientación a familias. Contacto: [TELÉFONO] · [CORREO]</p>
+          <h4>Direcciones</h4>
+          <ul><li>Plaza de la Constitución, 4, Edificio de Usos Múltiples, 6.ª planta, 38700 Santa Cruz de La Palma</li><li>Calle Pedro Miguel Hernández Camacho, 51, 38760 Los Llanos de Aridane</li></ul>
+          <p><strong>Móvil del Servicio de Logopedia:</strong> <a href="tel:+34618376073">618 376 073</a></p>
+          <p><strong>Teléfono fijo, Santa Cruz de La Palma:</strong> <a href="tel:+34922416830">922 416 830</a></p>
+          <p><strong>Teléfono fijo, Los Llanos de Aridane:</strong> <a href="tel:+34922403492">922 403 492</a></p>
+          <p><strong>Correo:</strong> <a href="mailto:lapalma@funcasor.org">lapalma@funcasor.org</a></p>
         </article>
       </div>
-      <p class="map-description">La Palma, Tenerife y Gran Canaria tienen atención activa. Selecciona cada isla para consultar dirección, horario y servicios.</p>
+      <p class="map-description">La Palma, Tenerife y Gran Canaria tienen atención activa. Selecciona una isla para consultar sus direcciones y contactos.</p>
     </section>
 
     <section class="section rehab-section" id="rehabilitacion">
@@ -253,11 +257,9 @@
     <div class="contact-grid">
       <div class="contact-options">
         <h3>Formas de contacto</h3>
-        <p><strong>Correo:</strong> [CORREO]</p>
-        <p><strong>Teléfono:</strong> [TELÉFONO] (puedes pedir que te contacten por mensaje)</p>
-        <p><strong>WhatsApp o mensajería:</strong> [CANAL DE MENSAJERÍA]</p>
-        <p><strong>Cita online o videollamada:</strong> [FORMA DE SOLICITARLA]</p>
-        <p><strong>Horario de atención:</strong> [HORARIO]</p>
+        <p><strong>Correo:</strong> <a href="mailto:funcasor@funcasor.org">funcasor@funcasor.org</a></p>
+        <p><strong>Teléfono de coordinación:</strong> <a href="tel:+34618376073">618 376 073</a></p>
+        <p>Ofrecemos sesiones de Logopedia online. Para pedir información, llama al teléfono de coordinación.</p>
         <p>Atendemos en Tenerife, Gran Canaria, La Palma y online.</p>
       </div>
       <form class="contact-form" name="solicitud-cita" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
@@ -267,20 +269,14 @@
         <div class="form-field"><label for="contacto-dato">Correo o teléfono</label><input id="contacto-dato" name="contacto" autocomplete="email" required aria-describedby="contacto-ayuda contacto-error"><small id="contacto-ayuda">Escribe al menos una forma de contacto.</small><span class="field-error" id="contacto-error"></span></div>
         <div class="form-field"><label for="isla">Isla o modalidad</label><select id="isla" name="isla" required aria-describedby="isla-error"><option value="">Elige una opción</option><option>Tenerife</option><option>Gran Canaria</option><option>La Palma</option><option>Online</option></select><span class="field-error" id="isla-error"></span></div>
         <div class="form-field"><label for="motivo">Motivo de consulta</label><select id="motivo" name="motivo" required aria-describedby="motivo-error"><option value="">Elige una opción</option><option>Logopedia</option><option>Rehabilitación auditiva</option><option>Intervención temprana</option><option>Apoyo educativo</option><option>Orientación familiar</option><option>Otro motivo</option></select><span class="field-error" id="motivo-error"></span></div>
+        <p class="form-privacy-note">No envíes datos de salud, diagnósticos ni informes médicos mediante este formulario.</p>
         <div class="form-field"><label for="mensaje">Mensaje</label><textarea id="mensaje" name="mensaje" rows="5" required aria-describedby="mensaje-error"></textarea><span class="field-error" id="mensaje-error"></span></div>
-        <div class="form-field privacy-field"><input id="privacidad" name="privacidad" type="checkbox" required aria-describedby="privacidad-error"><label for="privacidad">He leído la <a href="#privacidad-legal">información de privacidad</a> y acepto el uso de mis datos para responder a esta solicitud.</label><span class="field-error" id="privacidad-error"></span></div>
+        <div class="form-field privacy-field"><input id="privacidad" name="privacidad" type="checkbox" required aria-describedby="privacidad-error"><label for="privacidad">Acepto que Funcasor use los datos que envío para responder a esta solicitud.</label><span class="field-error" id="privacidad-error"></span></div>
         <button class="button primary" type="submit">Enviar solicitud</button>
       </form>
     </div>
   </section>
 
-  <section class="section legal-section" aria-labelledby="legal-title">
-    <h2 id="legal-title">Información legal</h2>
-    <p><strong>Pendiente de revisión legal.</strong> Estos textos son una plantilla y no sustituyen la revisión de Funcasor.</p>
-    <details><summary>Aviso legal</summary><p>Pendiente de revisión legal. Titular: [RAZÓN SOCIAL Y CIF]. Domicilio: [DOMICILIO SOCIAL]. Contacto: [CORREO].</p></details>
-    <details id="privacidad-legal"><summary>Política de privacidad</summary><p>Pendiente de revisión legal. Responsable: [RAZÓN SOCIAL Y CIF]. Finalidad: responder a solicitudes de información y citas. Base jurídica: [BASE JURÍDICA]. Conservación: [PLAZO]. Derechos: [CANAL PARA EJERCER DERECHOS].</p><p>No incluyas información de salud en este formulario. Si se recogen datos de salud, Funcasor debe explicar su tratamiento, base jurídica, acceso y conservación.</p></details>
-    <details><summary>Política de cookies</summary><p>Pendiente de revisión legal. Esta web no debe mostrar un aviso de cookies si no utiliza cookies no esenciales. Confirmar tecnologías y configuración antes de publicar.</p></details>
-  </section>
   </main>
 
   <footer class="site-footer">
@@ -290,8 +286,9 @@
           <img src="images/funcasor.png" alt="Funcasor, Fundación Canaria para las Personas con Sordera" class="footer-logo" width="2850" height="1232" loading="lazy">
         </a>
         <p>Servicio de Logopedia y rehabilitación auditiva en Canarias.</p>
-        <p>Correo: [CORREO] · Mensajería: [CANAL DE MENSAJERÍA]</p>
-        <p>Teléfono: [TELÉFONO] · Horario: [HORARIO]</p>
+        <p>Correo: <a href="mailto:funcasor@funcasor.org">funcasor@funcasor.org</a></p>
+        <p>Coordinación del Servicio de Logopedia: <a href="tel:+34618376073">618 376 073</a></p>
+        <p class="legal-identity">Fundación Canaria para las Personas con Sordera y sus Familias (Funcasor). CIF: G38298766. Carretera General La Laguna-Punta del Hidalgo, km 8,1, 38280 Tegueste, Santa Cruz de Tenerife.</p>
       </div>
 
       <div class="footer-enlaces">
@@ -303,7 +300,7 @@
           <a href="#juegos">Juegos</a>
         </nav>
       </div>
-      <div class="footer-contact"><p class="footer-title">Contacto</p><a href="#contacto">Solicita cita</a><p>[CORREO]</p><p>[TELÉFONO]</p></div>
+      <div class="footer-contact"><p class="footer-title">Redes sociales</p><nav class="social-links" aria-label="Redes sociales de Funcasor"><a href="https://www.facebook.com/fundacioncanariaparalaspersonasconsordera/" target="_blank" rel="noopener noreferrer">Facebook</a><a href="https://www.instagram.com/funcasoroficial/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.youtube.com/channel/UCA8Tz-KmNJM7TRGh9AH2Tpg" target="_blank" rel="noopener noreferrer">YouTube</a></nav></div>
     </div>
     <div class="footer-bottom">
       <span><b>© 2026 Funcasor. Todos los derechos reservados.</b></span>

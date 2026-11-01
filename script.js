@@ -2,17 +2,29 @@ const islandCopy = {
   "la-palma": {
     kicker: "La Palma",
     title: "Atención cercana y seguimiento coordinado",
-    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicación a cada persona y a su entorno. Dirección: [DIRECCIÓN LA PALMA]. Mapa: [ENLACE A MAPA]. Horario: [HORARIO]. Contacto: [TELÉFONO] · [CORREO]."
+    text: "El servicio adapta los objetivos de escucha, lenguaje y comunicación a cada persona y a su entorno.",
+    addresses: ["Plaza de la Constitución, 4, Edificio de Usos Múltiples, 6.ª planta, 38700 Santa Cruz de La Palma", "Calle Pedro Miguel Hernández Camacho, 51, 38760 Los Llanos de Aridane"],
+    mobile: "618 376 073",
+    fixedPhones: [{ label: "Santa Cruz de La Palma", number: "922 416 830" }, { label: "Los Llanos de Aridane", number: "922 403 492" }],
+    email: "lapalma@funcasor.org"
   },
   tenerife: {
     kicker: "Tenerife",
     title: "Intervención especializada y recursos compartidos",
-    text: "Valoramos necesidades, planificamos sesiones y coordinamos apoyos con familias y profesionales. Dirección: [DIRECCIÓN TENERIFE]. Mapa: [ENLACE A MAPA]. Horario: [HORARIO]. Contacto: [TELÉFONO] · [CORREO]."
+    text: "Valoramos necesidades, planificamos sesiones y coordinamos apoyos con familias y profesionales.",
+    addresses: ["Carretera General La Laguna-Punta del Hidalgo, km 8,1, 38280 Tegueste, Tenerife"],
+    mobile: "658 889 126",
+    fixedPhones: [{ label: "Teléfono institucional", number: "922 544 052" }],
+    email: "funcasor@funcasor.org"
   },
   "gran-canaria": {
     kicker: "Gran Canaria",
     title: "Rehabilitación auditiva orientada a la participación",
-    text: "Trabajamos la escucha y el lenguaje para la vida diaria. Dirección: [DIRECCIÓN GRAN CANARIA]. Mapa: [ENLACE A MAPA]. Horario: [HORARIO]. Contacto: [TELÉFONO] · [CORREO]."
+    text: "Trabajamos la escucha y el lenguaje para la vida diaria.",
+    addresses: ["Calle Antonio Manchado Viglietti, 1, 35005 Las Palmas de Gran Canaria", "Calle Escenógrafo Ramón Sánchez Prats, 64, 35018 Las Palmas de Gran Canaria"],
+    mobile: "616 834 008",
+    fixedPhones: [{ label: "Teléfono institucional", number: "928 233 289" }],
+    email: "grancanaria@funcasor.org"
   }
 };
 
@@ -476,6 +488,11 @@ document.querySelectorAll(".island").forEach((button) => {
       <p class="panel-kicker">${copy.kicker}</p>
       <h3>${copy.title}</h3>
       <p>${copy.text}</p>
+      <h4>Direcciones</h4>
+      <ul>${copy.addresses.map((address) => `<li>${address}</li>`).join("")}</ul>
+      <p class="island-contact-primary"><strong>Móvil del Servicio de Logopedia:</strong> <a href="tel:+34${copy.mobile.replaceAll(" ", "")}">${copy.mobile}</a></p>
+      ${copy.fixedPhones.map((phone) => `<p><strong>${phone.label}:</strong> <a href="tel:+34${phone.number.replaceAll(" ", "")}">${phone.number}</a></p>`).join("")}
+      <p><strong>Correo:</strong> <a href="mailto:${copy.email}">${copy.email}</a></p>
     `;
   });
 });
