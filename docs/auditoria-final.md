@@ -19,7 +19,7 @@ Fecha: 31 de octubre de 2026
 - Los formularios muestran errores junto a los campos, conservan etiquetas visibles y se pueden completar con teclado.
 - Se oscureció el color rosa de algunos fondos con texto blanco y se oscurecieron dos colores de texto del gráfico. La paleta de marca se conserva. Falta medir contrastes con herramienta.
 - Se simplificaron textos y se añadió explicación de «fonema» e «implante coclear».
-- Se añadió contacto, formulario Netlify con honeypot, avisos legales en plantilla, metadatos sociales, favicon, sitemap, robots y datos estructurados con marcadores.
+- Se añadió contacto, formulario Netlify con honeypot, metadatos sociales, favicon, sitemap, robots y datos estructurados.
 - Se añadieron dimensiones a imágenes usadas y carga diferida a los recursos no principales.
 
 ## Pruebas pendientes
@@ -33,4 +33,4 @@ Fecha: 31 de octubre de 2026
 
 ## Límites del resultado
 
-Esta revisión estática no acredita conformidad WCAG 2.2 AA ni una puntuación Lighthouse. La sección legal es una plantilla pendiente de revisión legal. La carga de iconos Font Awesome existente continúa usando su CDN; debe valorarse una copia local en una mejora posterior.
+Esta revisión estática no acredita conformidad WCAG 2.2 AA ni una puntuación Lighthouse. Los textos legales no se publican hasta completar la revisión y confirmar los datos pendientes. La carga de iconos Font Awesome existente continúa usando su CDN; debe valorarse una copia local en una mejora posterior.

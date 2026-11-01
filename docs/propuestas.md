@@ -14,6 +14,6 @@ Alternativas consideradas:
 - Se conservan los colores de marca. Se oscureció el rosa en botones con texto blanco para mejorar su contraste. Revisar contraste con una herramienta en la web final.
 - Se necesita validar el texto simplificado y la utilidad de los iconos con Funcasor y personas usuarias.
 - No se generaron imágenes WebP/AVIF porque no hay herramientas de imagen o proceso de construcción configurado. Debe decidirse cuál de las tres imágenes del mapa es la fuente correcta antes de generar formatos derivados.
-- El esquema JSON-LD usa marcadores provisionales de contacto. Sustituirlos por datos verificados antes de considerar los datos estructurados definitivos.
+- El esquema JSON-LD usa los datos de contacto y las direcciones confirmadas por Funcasor.
 - La auditoría automatizada y las pruebas con tecnologías de apoyo requieren navegador y herramientas disponibles en el entorno de publicación.
 - Si se añade vídeo, debe incluir subtítulos y reservar espacio para interpretación en lengua de signos española (LSE). No se añaden vídeos sin material aprobado.
