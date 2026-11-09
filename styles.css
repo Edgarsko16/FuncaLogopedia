@@ -4,14 +4,22 @@
   --paper: #f4f7f8;
   --panel: #ffffff;
   --brand: #eb4a8b;
+  /* Rosa Funcasor para rellenos con texto blanco: 4,95:1 (AA) */
+  --brand-strong: #d1286e;
   --brand-dark: #b82266;
   --brand-soft: #fce7f2;
   --teal: #1d8f8a;
+  --teal-text: #17736f;
   --teal-soft: #dff5f4;
   --blue: #2f5bb6;
   --blue-soft: #eaf0ff;
   --amber: #d38b2b;
+  --amber-text: #9a5b0f;
   --line: #dfe7ec;
+  /* Borde de controles de formulario: 4,5:1 sobre blanco */
+  --control-border: #6b7785;
+  /* Anillo de foco: rosa oscuro Funcasor, >= 5:1 sobre todos los fondos claros */
+  --focus: #b82266;
   --shadow: 0 18px 45px rgba(23, 33, 45, 0.10);
 }
 
@@ -21,6 +29,33 @@
 
 html {
   scroll-behavior: smooth;
+  /* Evita que la cabecera fija tape el elemento enfocado (WCAG 2.4.11) */
+  scroll-padding-top: 96px;
+}
+
+/* Foco visible y coherente en toda la página */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: white;
+  font-weight: 800;
+  transform: translateY(-150%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 body {
@@ -89,7 +124,7 @@ button {
   color: var(--muted);
   font-size: 14px;
   font-weight: 700;
-  transition: all 160ms ease;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
 .nav-links a:hover,
@@ -100,9 +135,14 @@ button {
 
 .nav-cta {
   margin-left: 4px;
-  background: var(--brand);
+  background: var(--brand-strong);
   color: white !important;
   box-shadow: 0 12px 24px rgba(235, 74, 139, 0.18);
+}
+
+.nav-links .nav-cta:hover,
+.nav-links .nav-cta:focus-visible {
+  background: var(--brand-dark);
 }
 
 .hero {
@@ -199,13 +239,17 @@ h3 {
 }
 
 .button.primary {
-  background: var(--brand);
+  background: var(--brand-strong);
   color: white;
   box-shadow: 0 14px 28px rgba(235, 74, 139, 0.18);
 }
 
+.button.primary:hover {
+  background: var(--brand-dark);
+}
+
 .button.secondary {
-  border-color: var(--line);
+  border-color: var(--control-border);
   background: white;
   color: var(--ink);
 }
@@ -306,9 +350,9 @@ h3 {
 }
 
 .pill-one { top: 34px; left: 18px; color: var(--brand-dark); }
-.pill-two { top: 92px; right: 0; color: var(--teal); }
+.pill-two { top: 92px; right: 0; color: var(--teal-text); }
 .pill-three { bottom: 84px; left: 0; color: var(--blue); }
-.pill-four { right: 16px; bottom: 74px; color: var(--amber); }
+.pill-four { right: 16px; bottom: 74px; color: var(--amber-text); }
 .pill-five { left: 140px; bottom: 12px; color: var(--brand-dark); }
 
 .section {
@@ -389,6 +433,7 @@ svg {
   width: auto;
   height: auto;
   border: 0;
+  border-radius: 999px;
   background: transparent;
   color: white;
   font-weight: 900;
@@ -404,6 +449,10 @@ svg {
   background: rgba(16, 25, 35, 0.82);
   color: white;
   font-size: 13px;
+}
+
+.island.active span {
+  background: var(--brand-dark);
 }
 
 .island:hover,
@@ -460,7 +509,7 @@ svg {
   cursor: pointer;
   text-align: left;
   overflow-wrap: anywhere;
-  transition: all 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
 .phase.active,
@@ -484,17 +533,19 @@ svg {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--blue-soft);
-  color: var(--blue);
+  background: var(--brand-soft);
+  color: var(--brand-dark);
   font-size: 14px;
 }
 
-.phase:focus-visible,
-.game-tab:focus-visible,
-.memory-card:focus-visible,
-.ling-option:focus-visible {
-  outline: 3px solid var(--blue);
-  outline-offset: 3px;
+.phase.active .phase-step {
+  background: var(--brand-dark);
+  color: white;
+}
+
+.phase.active .phase-icon {
+  background: var(--brand-dark);
+  color: white;
 }
 
 .rehab-detail {
@@ -811,12 +862,12 @@ svg {
   height: 150px;
   border-radius: 50%;
   color: white;
-  background: var(--brand);
+  background: var(--brand-strong);
   box-shadow: var(--shadow);
 }
 
 .stage-symbol.quiet {
-  background: #8a8f9d;
+  background: var(--muted);
 }
 
 .stage-symbol.word {
@@ -1221,8 +1272,15 @@ svg {
 }
 
 .game-actions button[data-play] {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--brand-strong);
+  border-color: var(--brand-strong);
+  color: white;
+}
+
+.game-actions button[data-play]:hover,
+.game-actions button[data-play]:focus-visible {
+  background: var(--brand-dark);
+  border-color: var(--brand-dark);
   color: white;
 }
 
@@ -1244,7 +1302,7 @@ svg {
 .level-control select {
   min-height: 38px;
   padding: 6px 28px 6px 10px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--control-border);
   border-radius: 8px;
   background: white;
   color: var(--ink);
@@ -1252,8 +1310,7 @@ svg {
 }
 
 .level-control select:focus-visible {
-  outline: 3px solid rgba(55, 97, 201, 0.22);
-  border-color: var(--blue);
+  border-color: var(--focus);
 }
 
 .instruction-transcript {
@@ -1292,7 +1349,7 @@ svg {
 
 .site-footer {
   background: var(--brand-dark);
-  color: rgba(255, 255, 255, 0.8);
+  color: white;
   padding: 42px 7vw 26px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -1322,7 +1379,7 @@ svg {
 .footer-brand p {
   margin: 0;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
+  color: white;
   font-weight: 500;
 }
 
@@ -1343,7 +1400,7 @@ svg {
 .footer-nav a {
   width: fit-content;
   padding: 6px 0;
-  color: rgba(255, 255, 255, 0.76);
+  color: white;
   font-weight: 700;
 }
 
@@ -1361,11 +1418,18 @@ svg {
   padding-top: 22px;
   border-top: 1px solid rgba(255, 255, 255, 0.16);
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.75);
+  color: white;
 }
 
 .footer-bottom a {
-  color: rgba(255, 255, 255, 0.8);
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* En el pie rosa oscuro el foco rosa no se vería: anillo blanco */
+.site-footer :focus-visible {
+  outline-color: white;
 }
 
 @media (max-width: 620px) {
@@ -1535,4 +1599,10 @@ svg {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* El destino del enlace de salto no necesita anillo propio */
+#contenido:focus,
+#contenido:focus-visible {
+  outline: none;
 }

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <header class="site-header">
     <a class="brand" href="#inicio" aria-label="Inicio Logopedia Funcasor">
       <img src="images/515017161_1158667262955738_3849744391132527867_n.jpg" alt="" class="brand-mark">
@@ -20,7 +21,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="contenido" tabindex="-1">
     <section class="hero" id="inicio">
       <div class="hero-copy">
         <a href="https://www.funcasor.org" target="_blank" rel="noopener noreferrer" aria-label="Funcasor, Fundación Canaria para las Personas con Sordera">
@@ -36,7 +37,7 @@
           <a class="button primary" href="#rehabilitacion">Ver proceso</a>
           <a class="button secondary" href="#juegos">Probar ejercicios</a>
         </div>
-        <div class="hero-meta" aria-label="Indicadores del servicio">
+        <div class="hero-meta" role="group" aria-label="Indicadores del servicio">
           <div class="meta-item">
             <strong>3 islas</strong>
             <span>atención activa</span>
@@ -51,7 +52,7 @@
           </div>
         </div>
       </div>
-      <div class="hero-visual" aria-label="Resumen visual del servicio">
+      <div class="hero-visual" aria-hidden="true">
         <div class="sound-board">
           <div class="sound-ring"></div>
           <div class="sound-core">
@@ -73,15 +74,15 @@
         <h2>Tres islas, una red de apoyo</h2>
       </div>
       <div class="islands-layout">
-        <div class="canary-map" role="img" aria-label="Mapa ilustrado de las islas Canarias con botones para cada isla">
+        <div class="canary-map" role="group" aria-label="Mapa ilustrado de las islas Canarias con botones para cada isla">
           <img src="images/islas-canarias-Photoroom.png" alt="" class="islands-art">
-          <button class="island la-palma active" data-island="la-palma" aria-label="La Palma" aria-pressed="true">
+          <button type="button" class="island la-palma active" data-island="la-palma" aria-label="La Palma" aria-pressed="true">
             <span>La Palma</span>
           </button>
-          <button class="island tenerife" data-island="tenerife" aria-label="Tenerife" aria-pressed="false">
+          <button type="button" class="island tenerife" data-island="tenerife" aria-label="Tenerife" aria-pressed="false">
             <span>Tenerife</span>
           </button>
-          <button class="island gran-canaria" data-island="gran-canaria" aria-label="Gran Canaria" aria-pressed="false">
+          <button type="button" class="island gran-canaria" data-island="gran-canaria" aria-label="Gran Canaria" aria-pressed="false">
             <span>Gran Canaria</span>
           </button>
         </div>
@@ -99,36 +100,36 @@
         <h2>Un camino progresivo para entrenar la escucha</h2>
         <p class="section-intro">Seguimos la progresión de habilidades auditivas descrita por Erber, tal como se trabaja en la intervención: primero advertir el sonido y, poco a poco, llegar a comprender el mensaje. Selecciona una fase para ver su explicación y practicarla.</p>
       </div>
-      <div class="timeline" aria-label="Fases de habilidades auditivas de Erber">
-        <button class="phase active" data-game="deteccion" aria-pressed="true">
+      <div class="timeline" role="group" aria-label="Fases de habilidades auditivas de Erber">
+        <button type="button" class="phase active" data-game="deteccion" aria-pressed="true">
           <span class="phase-step" aria-hidden="true">1</span>
           <span class="phase-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 5V5L8 10H4Zm12.5 2a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4Zm-2.5-9.5v2.1a8 8 0 0 1 0 14.8v2.1a10 10 0 0 0 0-19Z"/></svg>
           </span>
           <span>Detección</span>
         </button>
-        <button class="phase" data-game="discriminacion" aria-pressed="false">
+        <button type="button" class="phase" data-game="discriminacion" aria-pressed="false">
           <span class="phase-step" aria-hidden="true">2</span>
           <span class="phase-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M5 4h2v16H5V4Zm4 4h2v8H9V8Zm4-5h2v18h-2V3Zm4 7h2v4h-2v-4Z"/></svg>
           </span>
           <span>Discriminación</span>
         </button>
-        <button class="phase" data-game="identificacion" aria-pressed="false">
+        <button type="button" class="phase" data-game="identificacion" aria-pressed="false">
           <span class="phase-step" aria-hidden="true">3</span>
           <span class="phase-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M11 4h2v2h-2V4Zm0 4h2v12h-2V8ZM4 11h2v2H4v-2Zm14 0h2v2h-2v-2ZM6.3 5.3l1.4-1.4 1.4 1.4-1.4 1.4-1.4-1.4Zm10 10 1.4-1.4 1.4 1.4-1.4 1.4-1.4-1.4Zm0-10 1.4 1.4 1.4-1.4-1.4-1.4-1.4 1.4ZM6.3 16.7l1.4-1.4 1.4 1.4-1.4 1.4-1.4-1.4Z"/></svg>
           </span>
           <span>Identificación</span>
         </button>
-        <button class="phase" data-game="reconocimiento" aria-pressed="false">
+        <button type="button" class="phase" data-game="reconocimiento" aria-pressed="false">
           <span class="phase-step" aria-hidden="true">4</span>
           <span class="phase-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-9 9h2a7 7 0 1 1 7 7v2a9 9 0 0 0 0-18Zm-1 4h2v6h-2V7Zm0 8h2v2h-2v-2ZM7 12a5 5 0 0 1 5-5V5a7 7 0 0 0-7 7h2Z"/></svg>
           </span>
           <span>Reconocimiento</span>
         </button>
-        <button class="phase" data-game="comprension" aria-pressed="false">
+        <button type="button" class="phase" data-game="comprension" aria-pressed="false">
           <span class="phase-step" aria-hidden="true">5</span>
           <span class="phase-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 4h16v11H7l-3 3V4Zm3 4v2h10V8H7Zm0 4v2h7v-2H7Z"/></svg>
@@ -175,7 +176,7 @@
             <p class="panel-kicker" id="game-kicker">Erber · Detección</p>
             <h3 id="game-title">Presencia o ausencia de sonido</h3>
           </div>
-          <button class="icon-button" id="reset-game" aria-label="Reiniciar ejercicio">
+          <button type="button" class="icon-button" id="reset-game" aria-label="Reiniciar ejercicio">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h7a5 5 0 1 1-4.6 7H7.2a7 7 0 1 0 1.6-7H5l3-3 3 3H7Z"/></svg>
           </button>
         </div>
