@@ -18,48 +18,95 @@ const islandCopy = {
 
 const rehabCopy = {
   deteccion: {
+    group: "erber",
     title: "Detección",
     text: "La persona aprende a advertir la presencia o ausencia de sonido. Es la base para responder a la voz, sonidos ambientales y señales de alerta.",
     gameTitle: "Presencia o ausencia de sonido",
     instruction: "Pulsa reproducir y decide si hay sonido o silencio."
   },
   discriminacion: {
+    group: "erber",
     title: "Discriminación",
     text: "La persona compara dos estímulos y percibe si son iguales o diferentes atendiendo a rasgos como altura, duración o intensidad.",
     gameTitle: "Comparación de dos estímulos",
     instruction: "Escucha los dos tonos y decide si son iguales o diferentes."
   },
   "pares-minimos": {
+    group: "otros",
     title: "Pares mínimos",
     text: "La persona discrimina e identifica palabras reales que se diferencian en un único fonema, primero aisladas y después dentro de frases breves.",
     gameTitle: "Discriminación e identificación de pares mínimos",
     instruction: "Escucha la palabra o frase y elige la imagen correspondiente. Puedes repetirla o activar el apoyo textual."
   },
   "memoria-auditiva": {
+    group: "otros",
     title: "Memoria auditiva",
     text: "La persona retiene y reproduce secuencias de sonidos, palabras, números o instrucciones, respetando el orden en que las ha escuchado.",
     gameTitle: "Retención y recuerdo de secuencias auditivas",
     instruction: "Elige una modalidad y un nivel, escucha la secuencia completa y después reproduce el orden con las alternativas visuales."
   },
   identificacion: {
+    group: "erber",
     title: "Identificación",
     text: "La persona escucha palabras o secuencias y las identifica dentro de un conjunto cerrado de opciones conocidas que puede ver desde el principio.",
     gameTitle: "Elección dentro de un conjunto cerrado",
     instruction: "Observa el conjunto de opciones, escucha la palabra o secuencia y selecciona sus elementos en el mismo orden."
   },
   reconocimiento: {
+    group: "erber",
     title: "Reconocimiento",
     text: "La persona reconoce un sonido cotidiano sin recibir una pista previa clara sobre cuál va a escuchar.",
     gameTitle: "Reconocimiento de sonidos cotidianos",
     instruction: "Escucha el estímulo sin pista previa y responde: ¿qué has escuchado?"
   },
   comprension: {
+    group: "erber",
     title: "Comprensión",
     text: "La persona procesa una instrucción oral completa y responde teniendo en cuenta acción, objeto, color y, en ocasiones, el orden.",
     gameTitle: "Comprensión de instrucciones orales",
     instruction: "Escucha la instrucción completa y realiza la acción indicada. Puedes mostrar el texto como apoyo accesible."
+  },
+  ling: {
+    group: "otros",
+    title: "Sonidos de Ling",
+    text: "Los seis sonidos de Ling (/a/, /i/, /u/, /s/, /ʃ/ y /m/) cubren el rango de frecuencias del habla. Se usan como comprobación rápida y diaria de la audición con audífonos o implante coclear.",
+    gameTitle: "Comprobación diaria con los sonidos de Ling",
+    instruction: "Elige si quieres detectar o identificar. Pulsa reproducir y responde. Hay ensayos de silencio para comprobar que la respuesta es fiable."
+  },
+  memory: {
+    group: "otros",
+    title: "Memory",
+    text: "La persona busca parejas recordando dónde estaba cada carta. Al girar una carta se escucha su palabra, de modo que se une la imagen, la palabra escrita y su sonido.",
+    gameTitle: "Memory de imágenes y palabras",
+    instruction: "Gira dos cartas cada vez y busca las parejas. En el modo «Solo escuchando» las cartas no muestran nada: tienes que encontrar las parejas por lo que oyes."
   }
 };
+
+const lingSounds = {
+  a: { phoneme: "/a/", label: "Aaa", hint: "avión", symbol: "✈️" },
+  i: { phoneme: "/i/", label: "Iii", hint: "ratón", symbol: "🐭" },
+  u: { phoneme: "/u/", label: "Uuu", hint: "búho", symbol: "🦉" },
+  s: { phoneme: "/s/", label: "Sss", hint: "serpiente", symbol: "🐍" },
+  sh: { phoneme: "/ʃ/", label: "Shhh", hint: "silencio", symbol: "🤫" },
+  m: { phoneme: "/m/", label: "Mmm", hint: "¡qué rico!", symbol: "😋" }
+};
+
+// Formantes aproximados de las vocales del español (Hz) para la síntesis provisional.
+const lingVowelFormants = {
+  a: [{ frequency: 750, bandwidth: 90, gain: 1 }, { frequency: 1250, bandwidth: 110, gain: 0.55 }, { frequency: 2550, bandwidth: 160, gain: 0.22 }],
+  i: [{ frequency: 290, bandwidth: 60, gain: 1 }, { frequency: 2250, bandwidth: 120, gain: 0.45 }, { frequency: 3000, bandwidth: 180, gain: 0.3 }],
+  u: [{ frequency: 320, bandwidth: 60, gain: 1 }, { frequency: 760, bandwidth: 90, gain: 0.5 }, { frequency: 2400, bandwidth: 160, gain: 0.08 }]
+};
+
+const memoryWords = ["casa", "perro", "coche", "reloj", "barco", "gato", "pato", "taza", "pelota", "libro", "llave", "flor", "pan", "luna", "pez", "moto", "puerta"];
+
+const memoryModeLabels = {
+  "image-word": "Imagen y palabra",
+  "image-image": "Imagen e imagen",
+  listening: "Solo escuchando"
+};
+
+const memoryPairCounts = { 1: 3, 2: 4, 3: 6, 4: 8 };
 
 const soundNames = {
   dog: "Perro",
@@ -445,6 +492,33 @@ const auditoryMemoryState = {
   lastSignature: null,
   currentExercise: null
 };
+const lingState = {
+  mode: "identify",
+  optionCount: 6,
+  voice: "low",
+  correct: 0,
+  attempts: 0,
+  lastSound: null
+};
+const memoryGameState = {
+  mode: "image-word",
+  level: 1,
+  speakOnFlip: true,
+  cards: [],
+  flipped: [],
+  moves: 0,
+  pairsFound: 0,
+  locked: false,
+  flipBackTimer: null,
+  speechToken: 0
+};
+const noiseSettings = { level: "off", type: "babble" };
+// Nivel de referencia (RMS) de los estímulos; el ruido se ajusta respecto a él según la relación señal/ruido.
+const STIMULUS_REFERENCE_RMS = 0.12;
+const NOISE_LEAD_MS = 600;
+const noiseBufferCache = {};
+const lingBufferCache = {};
+let activeNoise = null;
 const lastSelections = {};
 const soundCache = {};
 
@@ -457,6 +531,10 @@ const gameStage = document.querySelector("#game-stage");
 const gameActions = document.querySelector("#game-actions");
 const feedback = document.querySelector("#feedback");
 const resetGameButton = document.querySelector("#reset-game");
+const gameDescription = document.querySelector("#game-description");
+const noiseLevelSelect = document.querySelector("#noise-level");
+const noiseTypeSelect = document.querySelector("#noise-type");
+const noiseStatus = document.querySelector("#noise-status");
 
 document.querySelectorAll(".island").forEach((button) => {
   button.addEventListener("click", () => {
@@ -483,6 +561,22 @@ document.querySelectorAll(".phase").forEach((button) => {
   });
 });
 
+document.querySelectorAll(".game-tab").forEach((button) => {
+  button.addEventListener("click", () => setGame(button.dataset.game));
+});
+
+noiseLevelSelect.addEventListener("change", () => {
+  noiseSettings.level = noiseLevelSelect.value;
+  stopBackgroundNoise(true);
+  updateNoiseStatus();
+});
+
+noiseTypeSelect.addEventListener("change", () => {
+  noiseSettings.type = noiseTypeSelect.value;
+  stopBackgroundNoise(true);
+  updateNoiseStatus();
+});
+
 resetGameButton.addEventListener("click", () => {
   if (currentGame === "pares-minimos") {
     resetMinimalPairSession();
@@ -492,24 +586,34 @@ resetGameButton.addEventListener("click", () => {
     resetAuditoryMemorySession();
     return;
   }
+  if (currentGame === "ling") {
+    lingState.correct = 0;
+    lingState.attempts = 0;
+    lingState.lastSound = null;
+  }
   renderGame();
 });
 
 function setGame(game) {
   currentGame = game;
-  document.querySelectorAll(".phase").forEach((item) => {
+  document.querySelectorAll(".phase, .game-tab").forEach((item) => {
     const isActive = item.dataset.game === game;
     item.classList.toggle("active", isActive);
     item.setAttribute("aria-pressed", String(isActive));
   });
   const copy = rehabCopy[game];
-  rehabDetail.innerHTML = `<h3>${copy.title}</h3><p>${copy.text}</p>`;
-  gameKicker.textContent = copy.title;
+  if (copy.group === "erber") {
+    rehabDetail.innerHTML = `<h3>${copy.title}</h3><p>${copy.text}</p>`;
+  }
+  gameKicker.textContent = copy.group === "erber" ? `Erber · ${copy.title}` : `Otros juegos · ${copy.title}`;
   gameTitle.textContent = copy.gameTitle;
+  gameDescription.textContent = copy.text;
   gameInstruction.textContent = copy.instruction;
-  const resetLabel = ["pares-minimos", "memoria-auditiva"].includes(game)
+  const resetLabel = ["pares-minimos", "memoria-auditiva", "ling"].includes(game)
     ? "Reiniciar juego y marcador"
-    : "Reiniciar ejercicio";
+    : game === "memory"
+      ? "Nueva partida"
+      : "Reiniciar ejercicio";
   resetGameButton.setAttribute("aria-label", resetLabel);
   resetGameButton.title = resetLabel;
   renderGame();
@@ -527,6 +631,7 @@ function renderGame() {
   currentPositiveFeedback = positiveFeedback;
   currentRetryFeedback = retryFeedback;
   currentTaskLevel = null;
+  clearMemoryFlipBackTimer();
   setFeedback("");
 
   const renderers = {
@@ -536,7 +641,9 @@ function renderGame() {
     "memoria-auditiva": renderAuditoryMemory,
     identificacion: renderIdentification,
     reconocimiento: renderRecognition,
-    comprension: renderComprehension
+    comprension: renderComprehension,
+    ling: renderLing,
+    memory: renderMemoryGame
   };
   renderers[currentGame]();
   updateGameControls();
@@ -1010,7 +1117,15 @@ gameActions.addEventListener("click", (event) => {
   const memoryTextToggle = event.target.closest("[data-toggle-memory-text]");
   const memoryDelete = event.target.closest("[data-memory-delete]");
   const memoryConfirm = event.target.closest("[data-memory-confirm]");
-  if (memoryTextToggle) {
+  const memoryGameNew = event.target.closest("[data-memory-game-new]");
+  const memoryGameSpeak = event.target.closest("[data-memory-game-speak]");
+  if (memoryGameNew) {
+    renderGame();
+  } else if (memoryGameSpeak) {
+    memoryGameState.speakOnFlip = !memoryGameState.speakOnFlip;
+    memoryGameSpeak.setAttribute("aria-pressed", String(memoryGameState.speakOnFlip));
+    memoryGameSpeak.textContent = memoryGameState.speakOnFlip ? "Voz al girar: activada" : "Voz al girar: desactivada";
+  } else if (memoryTextToggle) {
     toggleAuditoryMemoryText(memoryTextToggle);
   } else if (memoryDelete && canAnswer()) {
     currentSequence.pop();
@@ -1034,6 +1149,25 @@ gameActions.addEventListener("click", (event) => {
 });
 
 gameActions.addEventListener("change", (event) => {
+  const lingMode = event.target.closest("[data-ling-mode]");
+  const lingOptions = event.target.closest("[data-ling-options]");
+  const lingVoice = event.target.closest("[data-ling-voice]");
+  const memoryGameMode = event.target.closest("[data-memory-game-mode]");
+  const memoryGameLevel = event.target.closest("[data-memory-game-level]");
+  if (lingMode || lingOptions || lingVoice) {
+    if (lingMode) lingState.mode = lingMode.value;
+    if (lingOptions) lingState.optionCount = Number(lingOptions.value);
+    if (lingVoice) lingState.voice = lingVoice.value;
+    lingState.lastSound = null;
+    renderGame();
+    return;
+  }
+  if (memoryGameMode || memoryGameLevel) {
+    if (memoryGameMode) memoryGameState.mode = memoryGameMode.value;
+    if (memoryGameLevel) memoryGameState.level = Number(memoryGameLevel.value);
+    renderGame();
+    return;
+  }
   const memoryMode = event.target.closest("[data-memory-mode]");
   const memoryLevel = event.target.closest("[data-memory-level]");
   const memoryProgression = event.target.closest("[data-memory-progression]");
@@ -1093,6 +1227,11 @@ gameActions.addEventListener("change", (event) => {
 });
 
 gameStage.addEventListener("click", (event) => {
+  const memoryCard = event.target.closest("[data-memory-card]");
+  if (memoryCard && currentGame === "memory") {
+    flipMemoryCard(Number(memoryCard.dataset.memoryCard));
+    return;
+  }
   const memoryAnswer = event.target.closest("[data-memory-answer]");
   if (memoryAnswer && currentGame === "memoria-auditiva" && canAnswer()) {
     if (currentSequence.length < currentAnswer.length) {
@@ -1103,7 +1242,7 @@ gameStage.addEventListener("click", (event) => {
     return;
   }
   const answer = event.target.closest("[data-answer]");
-  if (answer && currentGame === "pares-minimos" && canAnswer()) {
+  if (answer && ["pares-minimos", "ling"].includes(currentGame) && canAnswer()) {
     checkAnswer(answer.dataset.answer);
     return;
   }
@@ -1129,22 +1268,31 @@ function playCurrentStimulus(button) {
   updateGameControls();
   setFeedback("Reproduciendo estímulo...");
 
-  let playbackResult;
-  try {
-    playbackResult = currentPlayable(renderStamp);
-  } catch (error) {
-    isStimulusPlaying = false;
-    updateGameControls();
-    setFeedback("No se ha podido reproducir el estímulo. Inténtalo de nuevo.", "retry");
-    return;
-  }
+  const playable = currentPlayable;
+  // Con ruido activo, el ruido empieza un poco antes para que el estímulo quede dentro de él.
+  const playWithConditions = async () => {
+    if (isNoiseEnabled()) {
+      const noiseStarted = await startBackgroundNoise();
+      if (renderStamp !== renderVersion || !isStimulusPlaying) {
+        return null;
+      }
+      if (noiseStarted) {
+        const leadCompleted = await waitDuringPlayback(NOISE_LEAD_MS, renderStamp);
+        if (!leadCompleted) {
+          return null;
+        }
+      }
+    }
+    return playable(renderStamp);
+  };
 
-  Promise.resolve(playbackResult)
+  playWithConditions()
     .then((duration) => {
       if (renderStamp !== renderVersion) {
         return;
       }
       if (!Number.isFinite(duration) || duration < 0) {
+        stopBackgroundNoise();
         isStimulusPlaying = false;
         updateGameControls();
         return;
@@ -1154,6 +1302,7 @@ function playCurrentStimulus(button) {
         if (renderStamp !== renderVersion) {
           return;
         }
+        stopBackgroundNoise();
         hasPlayedStimulus = true;
         isStimulusPlaying = false;
         updateGameControls();
@@ -1166,6 +1315,7 @@ function playCurrentStimulus(button) {
       if (renderStamp !== renderVersion) {
         return;
       }
+      stopBackgroundNoise();
       isStimulusPlaying = false;
       updateGameControls();
       setFeedback("No se ha podido reproducir el estímulo. Inténtalo de nuevo.", "retry");
@@ -1183,6 +1333,13 @@ function checkAnswer(answer) {
       minimalPairState.correct += 1;
     }
     updateMinimalPairScore();
+  }
+  if (currentGame === "ling") {
+    lingState.attempts += 1;
+    if (isCorrect) {
+      lingState.correct += 1;
+    }
+    updateLingScore();
   }
   setFeedback(isCorrect ? currentPositiveFeedback : currentRetryFeedback, isCorrect ? "ok" : "retry");
   if (isCorrect) {
@@ -1427,6 +1584,7 @@ function stopPlayback() {
     }
   });
   activeSources = [];
+  stopBackgroundNoise(true);
   if ("speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
@@ -1814,6 +1972,654 @@ function speak(text) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// Sonidos de Ling
+// ---------------------------------------------------------------------------
+
+function renderLing() {
+  const keys = Object.keys(lingSounds);
+  const isDetect = lingState.mode === "detect";
+  // En detección, uno de cada cuatro ensayos es silencio para comprobar que la respuesta es fiable.
+  const target = isDetect && Math.random() < 0.25
+    ? "silence"
+    : pickDifferent(keys, lingState.lastSound);
+  lingState.lastSound = target;
+  const voice = lingState.voice;
+  currentPlayable = target === "silence"
+    ? () => 1100
+    : (playbackVersion) => playLingSound(target, voice, playbackVersion);
+
+  if (isDetect) {
+    currentAnswer = target === "silence" ? "quiet" : "heard";
+    currentPositiveFeedback = target === "silence"
+      ? "Correcto. No ha sonado nada: era un ensayo de silencio."
+      : `Correcto. Ha sonado ${lingSounds[target].label.toLowerCase()} (${lingSounds[target].phoneme}).`;
+    currentRetryFeedback = "No coincide. Vuelve a escuchar con atención.";
+    gameStage.innerHTML = `
+      <div class="ling-stage">
+        ${stagePrompt("¿Has oído algo?", "Puede sonar uno de los seis sonidos de Ling o no sonar nada.", "Detección")}
+        ${lingNote()}
+      </div>
+    `;
+    gameActions.innerHTML = `
+      ${lingControls()}
+      ${playButton("Reproducir")}
+      <button type="button" data-answer="heard">Lo he oído</button>
+      <button type="button" data-answer="quiet">No he oído nada</button>
+      ${lingScoreMarkup()}
+    `;
+    return;
+  }
+
+  currentAnswer = target;
+  const sound = lingSounds[target];
+  currentPositiveFeedback = `Correcto. Era ${sound.label.toLowerCase()} (${sound.phoneme}), como en «${sound.hint}».`;
+  currentRetryFeedback = "No es ese sonido. Vuelve a escucharlo y compara las opciones.";
+  const distractors = shuffle(keys.filter((key) => key !== target)).slice(0, lingState.optionCount - 1);
+  const options = shuffle([target, ...distractors]);
+  gameStage.innerHTML = `
+    <div class="ling-stage">
+      <div class="ling-options${options.length > 3 ? " six" : ""}" aria-label="Sonidos de Ling para elegir">
+        ${options.map((key) => lingOptionMarkup(key)).join("")}
+      </div>
+      ${lingNote()}
+    </div>
+  `;
+  gameActions.innerHTML = `
+    ${lingControls()}
+    ${playButton("Reproducir sonido")}
+    ${lingScoreMarkup()}
+  `;
+}
+
+function lingOptionMarkup(key) {
+  const sound = lingSounds[key];
+  return `
+    <button type="button" class="ling-option" data-answer="${key}" aria-label="${sound.label}, como en ${sound.hint}">
+      <span class="ling-symbol" aria-hidden="true">${sound.symbol}</span>
+      <strong>${sound.label}</strong>
+      <small aria-hidden="true">${sound.phoneme} · ${sound.hint}</small>
+    </button>
+  `;
+}
+
+function lingControls() {
+  const isDetect = lingState.mode === "detect";
+  return `
+    <label class="level-control">
+      Modo
+      <select data-ling-mode>
+        <option value="identify"${isDetect ? "" : " selected"}>Identificar el sonido</option>
+        <option value="detect"${isDetect ? " selected" : ""}>Detectar sonido o silencio</option>
+      </select>
+    </label>
+    ${isDetect ? "" : `
+    <label class="level-control">
+      Opciones
+      <select data-ling-options>
+        <option value="3"${lingState.optionCount === 3 ? " selected" : ""}>3 sonidos</option>
+        <option value="6"${lingState.optionCount === 6 ? " selected" : ""}>6 sonidos</option>
+      </select>
+    </label>`}
+    <label class="level-control">
+      Voz
+      <select data-ling-voice>
+        <option value="low"${lingState.voice === "low" ? " selected" : ""}>Grave</option>
+        <option value="high"${lingState.voice === "high" ? " selected" : ""}>Aguda</option>
+      </select>
+    </label>
+  `;
+}
+
+function lingNote() {
+  return `<p class="ling-note">Sonidos sintetizados de forma provisional para la demostración. Para el uso en sesión conviene sustituirlos por grabaciones de voz real.</p>`;
+}
+
+function lingScoreText() {
+  return `Aciertos: ${lingState.correct} · Intentos: ${lingState.attempts}`;
+}
+
+function lingScoreMarkup() {
+  return `<span class="minimal-pair-score" id="ling-score" aria-live="polite" aria-atomic="true">${lingScoreText()}</span>`;
+}
+
+function updateLingScore() {
+  const score = document.querySelector("#ling-score");
+  if (score) {
+    score.textContent = lingScoreText();
+  }
+}
+
+async function playLingSound(sound, voice, playbackVersion) {
+  const context = ensureAudio();
+  const buffer = await getLingBuffer(sound, voice, context.sampleRate);
+  if (playbackVersion !== renderVersion || !isStimulusPlaying) {
+    return null;
+  }
+  const source = context.createBufferSource();
+  source.buffer = buffer;
+  source.connect(context.destination);
+  source.start();
+  trackSource(source);
+  return Math.ceil(buffer.duration * 1000);
+}
+
+function getLingBuffer(sound, voice, sampleRate) {
+  const key = `${sound}:${voice}`;
+  if (!lingBufferCache[key]) {
+    lingBufferCache[key] = renderLingBuffer(sound, voice, sampleRate).catch((error) => {
+      delete lingBufferCache[key];
+      throw error;
+    });
+  }
+  return lingBufferCache[key];
+}
+
+// Síntesis provisional: vocales y /m/ con fuente glotal y formantes; /s/ y /ʃ/ con ruido filtrado.
+async function renderLingBuffer(sound, voice, sampleRate) {
+  const duration = 1;
+  const context = createOfflineContext(duration, sampleRate);
+  const envelope = context.createGain();
+  envelope.gain.setValueAtTime(0, 0);
+  envelope.gain.linearRampToValueAtTime(1, 0.08);
+  envelope.gain.setValueAtTime(1, duration - 0.2);
+  envelope.gain.linearRampToValueAtTime(0, duration - 0.02);
+  envelope.connect(context.destination);
+
+  if (sound in lingVowelFormants || sound === "m") {
+    const fundamental = voice === "high" ? 220 : 125;
+    const source = context.createOscillator();
+    source.type = "sawtooth";
+    source.frequency.setValueAtTime(fundamental * 1.04, 0);
+    source.frequency.linearRampToValueAtTime(fundamental * 0.96, duration);
+    const vibrato = context.createOscillator();
+    const vibratoDepth = context.createGain();
+    vibrato.frequency.value = 5;
+    vibratoDepth.gain.value = fundamental * 0.006;
+    vibrato.connect(vibratoDepth);
+    vibratoDepth.connect(source.frequency);
+
+    if (sound === "m") {
+      const lowpass = context.createBiquadFilter();
+      lowpass.type = "lowpass";
+      lowpass.frequency.value = 320;
+      lowpass.Q.value = 0.9;
+      const nasal = context.createBiquadFilter();
+      nasal.type = "peaking";
+      nasal.frequency.value = 250;
+      nasal.Q.value = 2;
+      nasal.gain.value = 8;
+      source.connect(lowpass);
+      lowpass.connect(nasal);
+      nasal.connect(envelope);
+    } else {
+      lingVowelFormants[sound].forEach((formant) => {
+        const filter = context.createBiquadFilter();
+        const gain = context.createGain();
+        filter.type = "bandpass";
+        filter.frequency.value = formant.frequency;
+        filter.Q.value = formant.frequency / formant.bandwidth;
+        gain.gain.value = formant.gain;
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(envelope);
+      });
+    }
+    vibrato.start(0);
+    source.start(0);
+    source.stop(duration);
+  } else {
+    const source = context.createBufferSource();
+    source.buffer = whiteNoiseBuffer(context, duration);
+    const first = context.createBiquadFilter();
+    const second = context.createBiquadFilter();
+    if (sound === "s") {
+      first.type = "highpass";
+      first.frequency.value = 4000;
+      first.Q.value = 0.7;
+      second.type = "bandpass";
+      second.frequency.value = 6500;
+      second.Q.value = 1.1;
+    } else {
+      first.type = "highpass";
+      first.frequency.value = 1500;
+      first.Q.value = 0.7;
+      second.type = "bandpass";
+      second.frequency.value = 2700;
+      second.Q.value = 1.4;
+    }
+    source.connect(first);
+    first.connect(second);
+    second.connect(envelope);
+    source.start(0);
+  }
+
+  const rendered = await context.startRendering();
+  normalizeBuffer(rendered, STIMULUS_REFERENCE_RMS, 0.95);
+  return rendered;
+}
+
+// ---------------------------------------------------------------------------
+// Ruido de fondo
+// ---------------------------------------------------------------------------
+
+function isNoiseEnabled() {
+  return noiseSettings.level !== "off";
+}
+
+function noiseGainValue() {
+  return STIMULUS_REFERENCE_RMS * Math.pow(10, -Number(noiseSettings.level) / 20);
+}
+
+async function startBackgroundNoise() {
+  if (!isNoiseEnabled()) {
+    return false;
+  }
+  if (activeNoise) {
+    return true;
+  }
+  const context = ensureAudio();
+  const token = {};
+  activeNoise = { token, source: null, gain: null };
+  let buffer;
+  try {
+    buffer = await getNoiseBuffer(noiseSettings.type, context);
+  } catch (error) {
+    if (activeNoise && activeNoise.token === token) {
+      activeNoise = null;
+    }
+    return false;
+  }
+  if (!activeNoise || activeNoise.token !== token) {
+    return false;
+  }
+  const source = context.createBufferSource();
+  const gain = context.createGain();
+  const now = context.currentTime;
+  source.buffer = buffer;
+  source.loop = true;
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.linearRampToValueAtTime(noiseGainValue(), now + 0.3);
+  source.connect(gain);
+  gain.connect(context.destination);
+  source.start(now, Math.random() * Math.max(0, buffer.duration - 1));
+  activeNoise.source = source;
+  activeNoise.gain = gain;
+  setNoisePlaying(true);
+  return true;
+}
+
+function stopBackgroundNoise(immediate = false) {
+  if (!activeNoise) {
+    return;
+  }
+  const { source, gain } = activeNoise;
+  activeNoise = null;
+  if (source && gain && audioContext) {
+    const now = audioContext.currentTime;
+    const fade = immediate ? 0.04 : 0.35;
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(Math.max(gain.gain.value, 0.0001), now);
+    gain.gain.linearRampToValueAtTime(0.0001, now + fade);
+    try {
+      source.stop(now + fade + 0.02);
+    } catch (error) {
+      // La fuente puede haberse detenido ya.
+    }
+  }
+  setNoisePlaying(false);
+}
+
+function updateNoiseStatus() {
+  if (!isNoiseEnabled()) {
+    noiseStatus.textContent = "Sin ruido de fondo";
+    return;
+  }
+  const levelLabels = { 10: "bajo (+10 dB)", 5: "medio (+5 dB)", 0: "alto (0 dB)" };
+  const level = levelLabels[noiseSettings.level];
+  const type = noiseTypeSelect.options[noiseTypeSelect.selectedIndex].text.toLowerCase();
+  noiseStatus.textContent = `Ruido activado: ${type}, nivel ${level}`;
+}
+
+function setNoisePlaying(isPlaying) {
+  noiseStatus.classList.toggle("is-playing", isPlaying);
+}
+
+function getNoiseBuffer(type, context) {
+  if (!noiseBufferCache[type]) {
+    noiseBufferCache[type] = createNoiseBuffer(type, context).catch((error) => {
+      delete noiseBufferCache[type];
+      throw error;
+    });
+  }
+  return noiseBufferCache[type];
+}
+
+// Todos los ruidos se normalizan a RMS 1 para que la ganancia fije la relación señal/ruido.
+async function createNoiseBuffer(type, context) {
+  if (type === "rain") {
+    try {
+      const decoded = await loadLocalSound("noise-rain", "sounds/rain.wav", context);
+      const mono = context.createBuffer(1, decoded.length, decoded.sampleRate);
+      const output = mono.getChannelData(0);
+      for (let channel = 0; channel < decoded.numberOfChannels; channel += 1) {
+        const input = decoded.getChannelData(channel);
+        for (let index = 0; index < input.length; index += 1) {
+          output[index] += input[index] / decoded.numberOfChannels;
+        }
+      }
+      limitNoisePeaks(mono);
+      return mono;
+    } catch (error) {
+      return getNoiseBuffer("pink", context);
+    }
+  }
+  if (type === "babble") {
+    return renderBabbleBuffer(context.sampleRate);
+  }
+  const buffer = pinkNoiseBuffer(context, 8);
+  limitNoisePeaks(buffer);
+  return buffer;
+}
+
+// Murmullo: varias «voces» sintéticas que cambian de vocal y de entonación con ritmo silábico.
+async function renderBabbleBuffer(sampleRate) {
+  const duration = 8;
+  const context = createOfflineContext(duration, sampleRate);
+  const vowels = [
+    [750, 1250], [450, 1900], [290, 2250], [480, 850], [320, 760]
+  ];
+  for (let talker = 0; talker < 6; talker += 1) {
+    const baseFrequency = 95 + Math.random() * 135;
+    const source = context.createOscillator();
+    const firstFormant = context.createBiquadFilter();
+    const secondFormant = context.createBiquadFilter();
+    const secondGain = context.createGain();
+    const envelope = context.createGain();
+    source.type = "sawtooth";
+    firstFormant.type = "bandpass";
+    secondFormant.type = "bandpass";
+    firstFormant.Q.value = 5;
+    secondFormant.Q.value = 9;
+    secondGain.gain.value = 0.5;
+    envelope.gain.setValueAtTime(0, 0);
+    source.connect(firstFormant);
+    source.connect(secondFormant);
+    firstFormant.connect(envelope);
+    secondFormant.connect(secondGain);
+    secondGain.connect(envelope);
+    envelope.connect(context.destination);
+
+    let time = Math.random() * 0.3;
+    while (time < duration) {
+      const syllable = 0.12 + Math.random() * 0.16;
+      const [f1, f2] = vowels[Math.floor(Math.random() * vowels.length)];
+      firstFormant.frequency.setTargetAtTime(f1, time, 0.03);
+      secondFormant.frequency.setTargetAtTime(f2, time, 0.03);
+      source.frequency.setTargetAtTime(baseFrequency * (0.85 + Math.random() * 0.3), time, 0.06);
+      envelope.gain.setTargetAtTime(0.6 + Math.random() * 0.4, time, 0.02);
+      envelope.gain.setTargetAtTime(0, time + syllable, 0.03);
+      time += syllable + 0.03 + Math.random() * 0.09;
+      if (Math.random() < 0.12) {
+        time += 0.3 + Math.random() * 0.5;
+      }
+    }
+    source.start(0);
+  }
+  const rendered = await context.startRendering();
+  limitNoisePeaks(rendered);
+  return rendered;
+}
+
+function createOfflineContext(duration, sampleRate) {
+  const OfflineContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  return new OfflineContext(1, Math.ceil(sampleRate * duration), sampleRate);
+}
+
+function whiteNoiseBuffer(context, duration) {
+  const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * duration), context.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let index = 0; index < data.length; index += 1) {
+    data[index] = Math.random() * 2 - 1;
+  }
+  return buffer;
+}
+
+function pinkNoiseBuffer(context, duration) {
+  const buffer = context.createBuffer(1, Math.ceil(context.sampleRate * duration), context.sampleRate);
+  const data = buffer.getChannelData(0);
+  let b0 = 0;
+  let b1 = 0;
+  let b2 = 0;
+  for (let index = 0; index < data.length; index += 1) {
+    const white = Math.random() * 2 - 1;
+    b0 = 0.99765 * b0 + white * 0.099046;
+    b1 = 0.963 * b1 + white * 0.2965164;
+    b2 = 0.57 * b2 + white * 1.0526913;
+    data[index] = b0 + b1 + b2 + white * 0.1848;
+  }
+  return buffer;
+}
+
+// Limita suavemente los picos (p. ej., gotas fuertes en la lluvia) para que el ruido no sature a 0 dB.
+function limitNoisePeaks(buffer, maximumCrest = 6) {
+  normalizeBuffer(buffer, 1, Infinity);
+  const data = buffer.getChannelData(0);
+  for (let index = 0; index < data.length; index += 1) {
+    data[index] = maximumCrest * Math.tanh(data[index] / maximumCrest);
+  }
+  return normalizeBuffer(buffer, 1, Infinity);
+}
+
+function normalizeBuffer(buffer, targetRms, maximumPeak) {
+  const data = buffer.getChannelData(0);
+  let sumOfSquares = 0;
+  let peak = 0;
+  for (let index = 0; index < data.length; index += 1) {
+    sumOfSquares += data[index] * data[index];
+    peak = Math.max(peak, Math.abs(data[index]));
+  }
+  const rms = Math.sqrt(sumOfSquares / data.length);
+  if (!rms || !peak) {
+    return buffer;
+  }
+  const scale = Math.min(targetRms / rms, maximumPeak / peak);
+  for (let index = 0; index < data.length; index += 1) {
+    data[index] *= scale;
+  }
+  return buffer;
+}
+
+// ---------------------------------------------------------------------------
+// Memory de imágenes y palabras
+// ---------------------------------------------------------------------------
+
+function renderMemoryGame() {
+  const state = memoryGameState;
+  const pairCount = memoryPairCounts[state.level];
+  const words = shuffle(memoryWords).slice(0, pairCount);
+  const faces = {
+    "image-word": ["image", "word"],
+    "image-image": ["image", "image"],
+    listening: ["sound", "sound"]
+  }[state.mode];
+  const cards = [];
+  words.forEach((word) => {
+    faces.forEach((face) => cards.push({ word, face, flipped: false, matched: false }));
+  });
+  state.cards = shuffle(cards);
+  state.flipped = [];
+  state.moves = 0;
+  state.pairsFound = 0;
+  state.locked = false;
+
+  const columns = state.cards.length <= 6 ? 3 : 4;
+  gameStage.innerHTML = `
+    <div class="memory-board" style="--memory-columns: ${columns}" aria-label="Tablero de ${state.cards.length} cartas">
+      ${state.cards.map((card, index) => `<button type="button" class="memory-card" data-memory-card="${index}"></button>`).join("")}
+    </div>
+  `;
+  state.cards.forEach((card, index) => updateMemoryCard(index));
+
+  const isListening = state.mode === "listening";
+  gameActions.innerHTML = `
+    <label class="level-control">
+      Modo
+      <select data-memory-game-mode>
+        ${Object.entries(memoryModeLabels).map(([value, label]) => `<option value="${value}"${value === state.mode ? " selected" : ""}>${label}</option>`).join("")}
+      </select>
+    </label>
+    <label class="level-control">
+      Parejas
+      <select data-memory-game-level>
+        ${Object.entries(memoryPairCounts).map(([level, pairs]) => `<option value="${level}"${Number(level) === state.level ? " selected" : ""}>${pairs} parejas</option>`).join("")}
+      </select>
+    </label>
+    <button type="button" data-memory-game-speak aria-pressed="${isListening || state.speakOnFlip}"${isListening ? " disabled" : ""}>${isListening ? "Voz al girar: siempre en este modo" : state.speakOnFlip ? "Voz al girar: activada" : "Voz al girar: desactivada"}</button>
+    <button type="button" data-memory-game-new>Nueva partida</button>
+    <span class="minimal-pair-score" id="memory-game-score" aria-live="polite" aria-atomic="true">${memoryScoreText()}</span>
+  `;
+}
+
+function updateMemoryCard(index) {
+  const card = memoryGameState.cards[index];
+  const button = gameStage.querySelector(`[data-memory-card="${index}"]`);
+  if (!card || !button) {
+    return;
+  }
+  const visual = auditoryMemoryWordVisuals[card.word];
+  const position = `Carta ${index + 1}`;
+  const isVisible = card.flipped || card.matched;
+  let content = `<span class="memory-card-back" aria-hidden="true">?</span>`;
+  let label = `${position}, boca abajo`;
+
+  if (isVisible) {
+    const face = card.face === "sound" && card.matched ? "image-word" : card.face;
+    if (face === "image") {
+      content = `<span class="memory-card-symbol" aria-hidden="true">${visual.symbol}</span>`;
+      label = `${position}: imagen de ${visual.label.toLowerCase()}`;
+    } else if (face === "word") {
+      content = `<span class="memory-card-word" aria-hidden="true">${visual.label}</span>`;
+      label = `${position}: palabra ${visual.label.toLowerCase()}`;
+    } else if (face === "sound") {
+      content = `<span class="memory-card-symbol" aria-hidden="true">🔊</span>`;
+      label = `${position}: carta escuchada`;
+    } else {
+      content = `<span class="memory-card-symbol" aria-hidden="true">${visual.symbol}</span><span class="memory-card-caption" aria-hidden="true">${visual.label}</span>`;
+      label = `${position}: ${visual.label.toLowerCase()}`;
+    }
+  }
+  if (card.matched) {
+    label += ", pareja encontrada";
+  }
+
+  button.innerHTML = content;
+  button.setAttribute("aria-label", label);
+  button.classList.toggle("is-flipped", isVisible);
+  button.classList.toggle("is-matched", card.matched);
+  button.setAttribute("aria-disabled", String(card.matched));
+}
+
+function flipMemoryCard(index) {
+  const state = memoryGameState;
+  const card = state.cards[index];
+  if (!card || state.locked || card.matched || card.flipped) {
+    return;
+  }
+  card.flipped = true;
+  state.flipped.push(index);
+  updateMemoryCard(index);
+  if (state.speakOnFlip || state.mode === "listening") {
+    speakMemoryWord(card.word);
+  }
+  if (state.flipped.length < 2) {
+    setFeedback("");
+    return;
+  }
+
+  state.moves += 1;
+  const flippedIndexes = state.flipped;
+  const [first, second] = flippedIndexes.map((cardIndex) => state.cards[cardIndex]);
+  state.flipped = [];
+
+  if (first.word === second.word) {
+    first.matched = true;
+    second.matched = true;
+    state.pairsFound += 1;
+    flippedIndexes.forEach((cardIndex) => updateMemoryCard(cardIndex));
+    const label = auditoryMemoryWordVisuals[first.word].label;
+    if (state.pairsFound === state.cards.length / 2) {
+      setFeedback(`¡Enhorabuena! Has encontrado las ${state.pairsFound} parejas en ${state.moves} movimientos.`, "ok");
+    } else {
+      setFeedback(`¡Pareja encontrada! ${label}.`, "ok");
+    }
+  } else {
+    state.locked = true;
+    setFeedback("No son pareja. Recuerda dónde estaban y vuelve a intentarlo.", "retry");
+    const renderStamp = renderVersion;
+    state.flipBackTimer = window.setTimeout(() => {
+      state.flipBackTimer = null;
+      if (renderStamp !== renderVersion) {
+        return;
+      }
+      flippedIndexes.forEach((cardIndex) => {
+        state.cards[cardIndex].flipped = false;
+        updateMemoryCard(cardIndex);
+      });
+      state.locked = false;
+    }, state.mode === "listening" ? 2000 : 1400);
+  }
+  updateMemoryScore();
+}
+
+function speakMemoryWord(word) {
+  const token = ++memoryGameState.speechToken;
+  const renderStamp = renderVersion;
+  const isCurrent = () => token === memoryGameState.speechToken && renderStamp === renderVersion;
+  (async () => {
+    if (isNoiseEnabled()) {
+      const noiseStarted = await startBackgroundNoise();
+      if (!isCurrent()) {
+        return;
+      }
+      if (noiseStarted) {
+        await new Promise((resolve) => window.setTimeout(resolve, 300));
+        if (!isCurrent()) {
+          return;
+        }
+      }
+    }
+    try {
+      await speak(auditoryMemoryWordVisuals[word].label);
+    } catch (error) {
+      // Si la voz falla, el juego sigue siendo jugable con las imágenes.
+    }
+    if (isCurrent()) {
+      stopBackgroundNoise();
+    }
+  })();
+}
+
+function memoryScoreText() {
+  return `Parejas: ${memoryGameState.pairsFound}/${memoryGameState.cards.length / 2} · Movimientos: ${memoryGameState.moves}`;
+}
+
+function updateMemoryScore() {
+  const score = document.querySelector("#memory-game-score");
+  if (score) {
+    score.textContent = memoryScoreText();
+  }
+}
+
+function clearMemoryFlipBackTimer() {
+  if (memoryGameState.flipBackTimer !== null) {
+    window.clearTimeout(memoryGameState.flipBackTimer);
+    memoryGameState.flipBackTimer = null;
+  }
+  memoryGameState.locked = false;
+  memoryGameState.speechToken += 1;
+}
+
 function pick(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
@@ -1836,4 +2642,4 @@ function capitalize(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-renderGame();
+setGame(currentGame);
