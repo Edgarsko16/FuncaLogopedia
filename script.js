@@ -701,7 +701,7 @@ function renderIdentification() {
     ? "Esa palabra no coincide. Vuelve a escuchar y compara las opciones del conjunto cerrado."
     : "La secuencia no coincide o no está en el orden escuchado. Reproduce el estímulo e inténtalo otra vez.";
   gameStage.innerHTML = `
-    <div class="closed-set" aria-label="Conjunto cerrado de opciones conocidas">
+    <div class="closed-set" role="group" aria-label="Conjunto cerrado de opciones conocidas">
       ${shuffle(task.options).map((value) => identificationTarget(value)).join("")}
     </div>
   `;
@@ -754,11 +754,11 @@ function renderMinimalPairs() {
 
   gameStage.innerHTML = `
     <div class="minimal-pair-stage">
-      <div class="minimal-pair-meta" aria-label="Datos del ejercicio">
+      <div class="minimal-pair-meta" role="group" aria-label="Datos del ejercicio">
         <span>Nivel ${exercise.level}</span>
         <span>Contraste ${exercise.contrast}</span>
       </div>
-      <div class="minimal-pair-options" aria-label="Alternativas visuales">
+      <div class="minimal-pair-options" role="group" aria-label="Alternativas visuales">
         ${shuffle(exercise.options).map((word) => minimalPairTarget(word)).join("")}
       </div>
     </div>
@@ -819,14 +819,14 @@ function renderAuditoryMemory() {
 
   gameStage.innerHTML = `
     <div class="auditory-memory-stage">
-      <div class="auditory-memory-meta" aria-label="Configuración del ejercicio">
+      <div class="auditory-memory-meta" role="group" aria-label="Configuración del ejercicio">
         <span>Nivel ${auditoryMemoryState.level}</span>
         <span>${auditoryMemoryModeLabels[auditoryMemoryState.mode]}</span>
         ${auditoryMemoryState.mode === "numbers" ? `<span>Orden ${auditoryMemoryState.numberOrder === "direct" ? "directo" : "inverso"}</span>` : ""}
         <span>${exercise.answer.length} elementos</span>
       </div>
       <p class="auditory-memory-prompt">Escucha la secuencia completa. Las respuestas se activarán cuando termine.</p>
-      <div class="auditory-memory-options" aria-label="Alternativas para reconstruir la secuencia">
+      <div class="auditory-memory-options" role="group" aria-label="Alternativas para reconstruir la secuencia">
         ${exercise.options.map((value) => auditoryMemoryOption(value, exercise.type)).join("")}
       </div>
       <div class="auditory-memory-selection" aria-live="polite" aria-atomic="true">
@@ -1038,7 +1038,7 @@ function renderComprehension() {
     ? "La opción no responde a la pregunta o instrucción. Escúchala otra vez y vuelve a intentarlo."
     : "La secuencia no está en el orden indicado. Escucha de nuevo antes de repetirla.";
   gameStage.innerHTML = `
-    <div class="comprehension-board" aria-label="Opciones para seguir la instrucción oral">
+    <div class="comprehension-board" role="group" aria-label="Opciones para seguir la instrucción oral">
       ${shuffle(task.options).map((value) => comprehensionTarget(value)).join("")}
     </div>
     <p class="instruction-transcript" id="instruction-transcript" hidden>${task.text}</p>
@@ -2019,7 +2019,7 @@ function renderLing() {
   const options = shuffle([target, ...distractors]);
   gameStage.innerHTML = `
     <div class="ling-stage">
-      <div class="ling-options${options.length > 3 ? " six" : ""}" aria-label="Sonidos de Ling para elegir">
+      <div class="ling-options${options.length > 3 ? " six" : ""}" role="group" aria-label="Sonidos de Ling para elegir">
         ${options.map((key) => lingOptionMarkup(key)).join("")}
       </div>
       ${lingNote()}
@@ -2455,7 +2455,7 @@ function renderMemoryGame() {
 
   const columns = state.cards.length <= 6 ? 3 : 4;
   gameStage.innerHTML = `
-    <div class="memory-board" style="--memory-columns: ${columns}" aria-label="Tablero de ${state.cards.length} cartas">
+    <div class="memory-board" style="--memory-columns: ${columns}" role="group" aria-label="Tablero de ${state.cards.length} cartas">
       ${state.cards.map((card, index) => `<button type="button" class="memory-card" data-memory-card="${index}"></button>`).join("")}
     </div>
   `;
