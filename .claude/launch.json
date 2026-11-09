@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "funcasor-local",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "C:/Users/edgar/AppData/Local/Temp/claude/9d68ed48f22c16d6/e6f4ce67-f7ff-44d8-af06-848f6abd2ef1/scratchpad/serve.js",
+        "C:/Users/edgar/Desktop/Cosas/Proyecto Funcasor",
+        "5173"
+      ],
+      "port": 5173
+    }
+  ]
+}
